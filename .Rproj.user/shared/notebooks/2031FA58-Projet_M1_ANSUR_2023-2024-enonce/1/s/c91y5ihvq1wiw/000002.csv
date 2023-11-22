@@ -1,0 +1,4 @@
+"0","subset_X_m <- X_m[, bras_names_m]"
+"2","Erreur dans `[.data.frame`(X_m, , bras_names_m) : 
+  colonnes non définies sélectionnées
+"
