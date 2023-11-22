@@ -98,7 +98,9 @@ title('Répartition de la variable Y')
 
 **Analyse descriptive**
 
-A compléter.
+```{r}
+print(hello)
+```
 
 **Sélection de modèle**
 
