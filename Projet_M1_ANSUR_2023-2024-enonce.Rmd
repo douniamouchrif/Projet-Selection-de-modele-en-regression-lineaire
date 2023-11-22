@@ -68,7 +68,7 @@ pos = indices[nom_variables == "weightkg"]
 # pos = indices[nom_variables == "stature"]
 
 Y_m = donnees_m[,pos]/10 # Conversion en kg
-X_m = donnees_m[,-pos]
+X_m = donnees_m[,-pos] #92 variables sans la varibale pos
 dim(X_m)
 
 Y_f = donnees_f[,pos]/10 # Conversion en kg
@@ -99,6 +99,7 @@ title('Répartition de la variable Y')
 **Analyse descriptive**
 
 ```{r}
+<<<<<<< HEAD
 library(corrplot)
 # m
 main <- c("handbreadth", "handcircumference", "handlength", "palmlength")
@@ -119,9 +120,32 @@ names(X_f)[grep("Main", names(X_f))]
 
 M = cor(X_f[imain])
 corrplot(M, method = 'color')
+=======
+#print(hello)
+>>>>>>> 09828d457118f5918ce7e8470b5187c2cbef77b6
 ```
 
+```{r eval=TRUE, warning=FALSE, error = TRUE, message=FALSE}
+bras <- c("span", "sleevelengthspinewrist", "radialestylionlength", "sleeveoutseam", "wristcircumference", "forearmhandlength", "forearmcenterofgriplength", "thumbtipreach", "bicepscircumferenceflexed", "forearmcircumferenceflexed", "acromionradialelength", "shoulderelbowlength")
+bras <- na.omit(bras)
+
+ibras <- which(!is.na(match(bras, names(X_m))))
+
+names(X_m)[ibras] <- c("MempanBras", "MlongueurMancheBras", "MlongueurAvantBras", "MlongueurMancheSeuleBras", "McirconférencePoignetBras", "MlongueurAvantBrasMain", "MlongueurAvantBrasPoing", "MlongueurDosPoingBras", "McirconférenceBicepsBras", "McirconférenceAvantBras", "MlongueurArrièreBras", "MlongueurÉpauleCoudeBras")
+
+# Filter names containing "Bras"
+bras_names_m <- names(X_m)[grep("Bras", names(X_m))]
+
+ibras <- which(!is.na(match(bras, names(X_f))))
+
+names(X_f)[ibras] <- c("FempanBras", "FlongueurMancheBras", "FlongueurAvantBras", "FlongueurMancheSeuleBras", "FcirconférencePoignetBras", "FlongueurAvantBrasMain", "FlongueurAvantBrasPoing", "FlongueurDosPoingBras", "FcirconférenceBicepsBras", "FcirconférenceAvantBras", "FlongueurArrièreBras", "FlongueurÉpauleCoudeBras")
+
+# Filter names containing "Bras"
+bras_names_f <- names(X_f)[grep("Bras", names(X_f))]
+```  
+
 ```{r}
+<<<<<<< HEAD
 # m
 pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
           "footbreadthhorizontal", "footlength", "heelbreadth",
@@ -160,7 +184,21 @@ corrplot(M, method = 'color')
 
 ```{r}
 print('coucou dounia')
+=======
+subset_X_m <- X_m[, bras_names_m]
+data_matrix <- cbind(Y_m, subset_X_m)
+model_poids_bras_m <- lm(Y_m ~ ., data = data_matrix)
+summary(model_poids_bras_m)
+>>>>>>> 09828d457118f5918ce7e8470b5187c2cbef77b6
 ```
+```{r}
+subset_X_f <- X_f[, bras_names_f]
+data_matrix <- cbind(Y_f, subset_X_f)
+model_poids_bras_f <- lm(Y_f ~ ., data = data_matrix)
+summary(model_poids_bras_f)
+```
+
+
 
 ```{r}
 print('coucou mathilde ')
