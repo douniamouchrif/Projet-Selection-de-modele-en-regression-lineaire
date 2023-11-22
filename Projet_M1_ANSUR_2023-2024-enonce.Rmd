@@ -99,8 +99,64 @@ title('Répartition de la variable Y')
 **Analyse descriptive**
 
 ```{r}
-print(hello)
+library(corrplot)
+# m
+main <- c("handbreadth", "handcircumference", "handlength", "palmlength")
+main <- na.omit(main)
+imain <- which(!is.na(match(main, names(X_m))))
+names(X_m)[imain] <- c("MlargeurMain", "McironférenceMain", "MlongueurMain", "MlongueurPaumeMain")
+names(X_m)[grep("Main", names(X_m))]
+
+M = cor(X_m[imain])
+corrplot(M, method = 'color')
+
+# f
+main <- c("handbreadth", "handcircumference", "handlength", "palmlength")
+main <- na.omit(main)
+imain <- which(!is.na(match(main, names(X_f))))
+names(X_f)[imain] <- c("FlargeurMain", "FcironférenceMain", "FlongueurMain", "FlongueurPaumeMain")
+names(X_f)[grep("Main", names(X_f))]
+
+M = cor(X_f[imain])
+corrplot(M, method = 'color')
 ```
+
+```{r}
+# m
+pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
+          "footbreadthhorizontal", "footlength", "heelbreadth",
+          "lateralmalleolusheight",
+          "anklecircumference", "heelanklecircumference")
+pied <- na.omit(pied)
+ipied <- which(!is.na(match(pied, names(X_m))))
+names(X_m)[ipied] <-
+   c("MciconférencePied", "MlongueurArrièrePied", "MlargeurBimalléolairePied",
+          "MlargeurPied", "MlongueurPied", "MlargeurTalonPied",
+          "MhauteurMalléolairePied",
+     "McirconférenceChevillePied", "McirconférenceChevilleTalonPied")
+names(X_m)[grep("Pied", names(X_m))]
+
+M = cor(X_m[ipied])
+corrplot(M, method = 'color')
+
+# f
+pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
+          "footbreadthhorizontal", "footlength", "heelbreadth",
+          "lateralmalleolusheight",
+          "anklecircumference", "heelanklecircumference")
+pied <- na.omit(pied)
+ipied <- which(!is.na(match(pied, names(X_f))))
+names(X_f)[ipied] <-
+   c("FciconférencePied", "FlongueurArrièrePied", "FlargeurBimalléolairePied",
+          "FlargeurPied", "FlongueurPied", "FlargeurTalonPied",
+          "FhauteurMalléolairePied",
+     "FcirconférenceChevillePied", "FcirconférenceChevilleTalonPied")
+names(X_f)[grep("Pied", names(X_f))]
+
+M = cor(X_f[ipied])
+corrplot(M, method = 'color')
+```
+
 
 ```{r}
 print('coucou dounia')
@@ -113,4 +169,9 @@ print('coucou mathilde ')
 **Sélection de modèle**
 
 A compléter.
+```{r}
+library(car)
+mod = lm...  
+vid(mod)
+```
 
