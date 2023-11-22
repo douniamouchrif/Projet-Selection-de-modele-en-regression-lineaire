@@ -102,10 +102,15 @@ title('Répartition de la variable Y')
 print(hello)
 ```
 
+```{r}
+print('coucou dounia')
+```
+
+```{r}
+print('coucou mathilde ')
+```
+
 **Sélection de modèle**
 
 A compléter.
-```{r}
-print('coucou')
-```
 
