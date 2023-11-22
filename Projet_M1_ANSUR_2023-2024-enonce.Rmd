@@ -1,0 +1,102 @@
+---
+title: "Projet - Sélection de modèle en régression linéaire"
+author: 'Université de Bordeaux - M1 Master MAS - UE : Modèles de régression'
+date: "Année 2023-2024"
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    number_sections: yes
+fontsize: 11pt
+---
+
+**Nom : **  
+**Prénom : ** 
+
+**Nom : **  \
+**Prénom : **
+
+\newtheorem{question}{Question}
+\newtheorem{definition}{Definition}
+
+\newcommand{\Var}{\mbox{Var}}
+\newcommand{\Cov}{\mbox{Cov}}
+
+**Préambule**
+
+Dans ce projet, il est proposé de s'intéresser à l'analyse d'un jeu de données réelles disponible à l'URL : https://www.openlab.psu.edu/ansur2/.
+
+Il s'agit du jeu de données ``ANSUR II`` (Anthropometric Survey of US Army Personnel) relatives à des caractéristiques de taille et forme du corps humain. Il s’agit d’un ensemble de 93 mesures effectuées sur plus de 6 000 militaires américains adultes, dont 4 082 hommes et 1 986 femmes. On va proposer de choisir l'une des variables (par exemple le poids d'un individu) et chercher à l'expliquer en fonction des $p=92$ autres variables du jeu de données à l'aide d'un modèle linéaire. Le but de votre analyse statistique est de trouver un sous-ensemble (de petite taille) de variables qui permettent de bien expliquer le poids d'individu. Lors de votre avancée dans le projet, vous pourrez aussi considérer une autre variable à expliquer en fonction des autres comme par exemple la taille d'un individu.
+
+Pour vous guider dans l'explication du nom des variables en Anglais, vous pourrez consulter ce document très détaillé sur ce jeu de données qui propose en particulier une traduction en Français du nom des variables ainsi qu'une étude descriptive de la répartition de leurs valeurs entre les hommes et les femmes :
+
+https://pbil.univ-lyon1.fr/R/pdf/pps100.pdf
+
+**Travail à effectuer par groupe de 2 ou 3 étudiants.** Vous devez rendre sous la forme d'un unique rapport en .html produit à partir de Rmarkdown (en incluant uniquement le code nécessaire aux conclusions pertinentes de votre étude) : 
+
+- une analyse de statistique descriptive du jeu de données (par exemple : utiliser des Boxplots, méthode de visualisation d'une matrice de corrélation, analyse en composantes principales)
+
+- décrire votre méthode de sélection de modèle pour expliquer le poids (ou bien la taille) d'un individu en fonction d'un petit nombre de variables pertinentes
+
+- distinguer éventuellement dans votre analyse statitique les hommes et les femmes
+
+On veillera à privilégier des tableaux et des outils graphiques pour rendre compte des conclusions de votre étude.
+
+**Prise en main des données**
+ 
+```{r eval=TRUE, warning=FALSE, error = TRUE, message=FALSE}
+# Lecture des données ANSUR
+
+ansurm = read.csv('ANSUR_II_MALE_Public.csv')
+ansurf = read.csv('ANSUR_II_FEMALE_Public.csv')
+
+p = 93 # Nombre de variables morphométriques
+names(ansurm)
+names(ansurf)
+
+donnees_m = ansurm[2:(p+1)]
+donnees_f = ansurf[2:(p+1)]
+nom_variables = names(ansurm)[2:(p+1)]
+print(nom_variables)
+
+# Choix de la variable à expliquer
+indices = 1:p
+pos = indices[nom_variables == "weightkg"]
+# pos = indices[nom_variables == "stature"]
+
+Y_m = donnees_m[,pos]/10 # Conversion en kg
+X_m = donnees_m[,-pos]
+dim(X_m)
+
+Y_f = donnees_f[,pos]/10 # Conversion en kg
+X_f = donnees_f[,-pos]
+dim(X_f)
+
+
+# Visualisation de la répartition de la variable explicative selon le sexe
+polycurve <- function(x, y, base.y = min(y), ...) {
+  polygon(x = c(min(x), x, max(x)), y = c(base.y, y, base.y), ...)
+}
+
+colM = rgb(0.2, 0.2, 1, 0.5)
+colF = rgb(1, 0.2, 0.2, 0.5)
+
+res_f = density(Y_f)
+plot(res_f$x,res_f$y,type="l",xlab="Poids en kg",ylab="")
+polycurve(res_f$x, res_f$y, base.y = 0, col = colF)
+
+res_m = density(Y_m)
+lines(res_m$x,res_m$y,type="l")
+polycurve(res_m$x, res_m$y, base.y = 0, col = colM)
+
+legend(100, 0.035, legend=c("Hommes", "Femmes"),fill=c(colM, colF))
+title('Répartition de la variable Y')
+```
+
+**Analyse descriptive**
+
+A compléter.
+
+**Sélection de modèle**
+
+A compléter.
