@@ -119,6 +119,10 @@ names(X_f)[grep("Main", names(X_f))]
 
 M = cor(X_f[imain])
 corrplot(M, method = 'color')
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 ```
 
 ```{r eval=TRUE, warning=FALSE, error = TRUE, message=FALSE}
@@ -141,6 +145,10 @@ bras_names_f <- names(X_f)[grep("Bras", names(X_f))]
 ```  
 
 ```{r}
+<<<<<<< Updated upstream
+=======
+# m
+>>>>>>> Stashed changes
 pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
           "footbreadthhorizontal", "footlength", "heelbreadth",
           "lateralmalleolusheight",
@@ -177,15 +185,21 @@ corrplot(M, method = 'color')
 
 
 ```{r}
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 subset_X_m <- X_m[, bras_names_m]
 data_matrix <- cbind(Y_m, subset_X_m)
 model_poids_bras_m <- lm(Y_m ~ ., data = data_matrix)
 summary(model_poids_bras_m)
 
+<<<<<<< Updated upstream
 ```
 
 ```{r}
+=======
+>>>>>>> Stashed changes
 subset_X_f <- X_f[, bras_names_f]
 data_matrix <- cbind(Y_f, subset_X_f)
 model_poids_bras_f <- lm(Y_f ~ ., data = data_matrix)
