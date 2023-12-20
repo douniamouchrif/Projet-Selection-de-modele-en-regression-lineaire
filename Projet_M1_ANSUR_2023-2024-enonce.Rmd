@@ -285,6 +285,7 @@ jambe <- c("functionalleglength",
    "kneeheightmidpatella", "lateralfemoralepicondyleheight",
    "calfcircumference", "lowerthighcircumference", "thighcircumference")
 
+####HOMMES
 ijambe_m <- which(!is.na(match(jambe, names(X_m))))
 colnames(X_m)[ijambe_m] <-
    c("MlongueurJambe",
@@ -314,8 +315,6 @@ corrplot(jambe_f_cor,order="hclust", method = 'color')
 
 # stature
 ```{r}
-library(corrplot)
-
 stature <- c("overheadfingertipreachsitting",
    "elbowrestheight", "eyeheightsitting", "sittingheight",
    "axillaheight", "chestheight", "iliocristaleheight",
