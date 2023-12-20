@@ -98,57 +98,33 @@ title('Répartition de la variable Y')
 
 **Analyse descriptive**
 
+#main
 ```{r}
 library(corrplot)
-# m
-main <- c("handbreadth", "handcircumference", "handlength", "palmlength")
-main <- na.omit(main)
-imain <- which(!is.na(match(main, names(X_m))))
-names(X_m)[imain] <- c("MlargeurMain", "McironférenceMain", "MlongueurMain", "MlongueurPaumeMain")
+####HOMMES
+main_m <- c("handbreadth", "handcircumference", "handlength", "palmlength")
+main_m <- na.omit(main_m)
+imain_m <- which(!is.na(match(main_m, names(X_m))))
+names(X_m)[imain_m] <- c("MlargeurMain", "McironférenceMain", "MlongueurMain", "MlongueurPaumeMain")
 names(X_m)[grep("Main", names(X_m))]
 
-M = cor(X_m[imain])
+M = cor(X_m[imain_m])
 corrplot(M, method = 'color')
 
 # f
-main <- c("handbreadth", "handcircumference", "handlength", "palmlength")
-main <- na.omit(main)
-imain <- which(!is.na(match(main, names(X_f))))
-names(X_f)[imain] <- c("FlargeurMain", "FcironférenceMain", "FlongueurMain", "FlongueurPaumeMain")
+main_f <- c("handbreadth", "handcircumference", "handlength", "palmlength")
+main_f <- na.omit(main_f)
+imain_f <- which(!is.na(match(main_f, names(X_f))))
+names(X_f)[imain_f] <- c("FlargeurMain", "FcironférenceMain", "FlongueurMain", "FlongueurPaumeMain")
 names(X_f)[grep("Main", names(X_f))]
 
-M = cor(X_f[imain])
+M = cor(X_f[imain_f])
 corrplot(M, method = 'color')
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 ```
 
-```{r eval=TRUE, warning=FALSE, error = TRUE, message=FALSE}
-bras <- c("span", "sleevelengthspinewrist", "radialestylionlength", "sleeveoutseam", "wristcircumference", "forearmhandlength", "forearmcenterofgriplength", "thumbtipreach", "bicepscircumferenceflexed", "forearmcircumferenceflexed", "acromionradialelength", "shoulderelbowlength")
-bras <- na.omit(bras)
-
-ibras <- which(!is.na(match(bras, names(X_m))))
-
-names(X_m)[ibras] <- c("MempanBras", "MlongueurMancheBras", "MlongueurAvantBras", "MlongueurMancheSeuleBras", "McirconférencePoignetBras", "MlongueurAvantBrasMain", "MlongueurAvantBrasPoing", "MlongueurDosPoingBras", "McirconférenceBicepsBras", "McirconférenceAvantBras", "MlongueurArrièreBras", "MlongueurÉpauleCoudeBras")
-
-# Filter names containing "Bras"
-bras_names_m <- names(X_m)[grep("Bras", names(X_m))]
-
-ibras <- which(!is.na(match(bras, names(X_f))))
-
-names(X_f)[ibras] <- c("FempanBras", "FlongueurMancheBras", "FlongueurAvantBras", "FlongueurMancheSeuleBras", "FcirconférencePoignetBras", "FlongueurAvantBrasMain", "FlongueurAvantBrasPoing", "FlongueurDosPoingBras", "FcirconférenceBicepsBras", "FcirconférenceAvantBras", "FlongueurArrièreBras", "FlongueurÉpauleCoudeBras")
-
-# Filter names containing "Bras"
-bras_names_f <- names(X_f)[grep("Bras", names(X_f))]
-```  
-
+#pied
 ```{r}
-<<<<<<< Updated upstream
-=======
-# m
->>>>>>> Stashed changes
+####HOMMES
 pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
           "footbreadthhorizontal", "footlength", "heelbreadth",
           "lateralmalleolusheight",
@@ -165,7 +141,7 @@ names(X_m)[grep("Pied", names(X_m))]
 M = cor(X_m[ipied])
 corrplot(M, method = 'color')
 
-
+# f
 pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
           "footbreadthhorizontal", "footlength", "heelbreadth",
           "lateralmalleolusheight",
@@ -183,31 +159,56 @@ M = cor(X_f[ipied])
 corrplot(M, method = 'color')
 ```
 
+#tete
+```{r}
+
+```
+
+#bras
+```{r eval=TRUE, warning=FALSE, error = TRUE, message=FALSE}
+####HOMMES
+bras <- c("span", "sleevelengthspinewrist", "radialestylionlength", "sleeveoutseam", "wristcircumference", "forearmhandlength", "forearmcenterofgriplength", "thumbtipreach", "bicepscircumferenceflexed", "forearmcircumferenceflexed", "acromionradialelength", "shoulderelbowlength")
+bras <- na.omit(bras)
+
+ibras <- which(!is.na(match(bras, names(X_m))))
+
+names(X_m)[ibras] <- c("MempanBras", "MlongueurMancheBras", "MlongueurAvantBras", "MlongueurMancheSeuleBras", "McirconférencePoignetBras", "MlongueurAvantBrasMain", "MlongueurAvantBrasPoing", "MlongueurDosPoingBras", "McirconférenceBicepsBras", "McirconférenceAvantBras", "MlongueurArrièreBras", "MlongueurÉpauleCoudeBras")
+bras_names_m <- names(X_m)[grep("Bras", names(X_m))]
+
+####FEMMES
+ibras <- which(!is.na(match(bras, names(X_f))))
+
+names(X_f)[ibras] <- c("FempanBras", "FlongueurMancheBras", "FlongueurAvantBras", "FlongueurMancheSeuleBras", "FcirconférencePoignetBras", "FlongueurAvantBrasMain", "FlongueurAvantBrasPoing", "FlongueurDosPoingBras", "FcirconférenceBicepsBras", "FcirconférenceAvantBras", "FlongueurArrièreBras", "FlongueurÉpauleCoudeBras")
+
+bras_names_f <- names(X_f)[grep("Bras", names(X_f))]
+```  
+
 
 ```{r}
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
+####HOMMES
 subset_X_m <- X_m[, bras_names_m]
 data_matrix <- cbind(Y_m, subset_X_m)
 model_poids_bras_m <- lm(Y_m ~ ., data = data_matrix)
 summary(model_poids_bras_m)
 
-<<<<<<< Updated upstream
-```
-
-```{r}
-=======
->>>>>>> Stashed changes
+####FEMMES
 subset_X_f <- X_f[, bras_names_f]
 data_matrix <- cbind(Y_f, subset_X_f)
 model_poids_bras_f <- lm(Y_f ~ ., data = data_matrix)
 summary(model_poids_bras_f)
 ```
 
+# tronc
+```{r}
 
+```
 
+# jambe
+```{r}
+
+```
+
+# stature
 ```{r}
 library(corrplot)
 print('coucou dounia')
@@ -262,6 +263,12 @@ statureF <- (X_m[, stature_names_f])
 statureF_cor = cor(statureF)
 corrplot(StatureF_cor)
 ```
+
+#autres variables
+```{r}
+
+```
+
 
 **Sélection de modèle**
 
