@@ -296,7 +296,7 @@ model_poids_bras_f <- lm(Y_f ~ ., data = data_matrix)
 summary(model_poids_bras_f)
 ```
 
-# tronc
+#Tronc
 ```{r}
 torse <- c("buttockcircumference", "chestcircumference", "shouldercircumference",
            "waistcircumference", "verticaltrunkcircumferenceusa", "waistdepth", "chestdepth",
@@ -305,8 +305,10 @@ torse <- c("buttockcircumference", "chestcircumference", "shouldercircumference"
            "hipbreadthsitting", "waistfrontlengthsitting", "interscyei", "interscyeii",
            "waistbacklength", "bicristalbreadth", "chestbreadth", "hipbreadth", 
            "waistbreadth", "buttockdepth", "crotchlengthposterioromphalion")
+```
 
-####HOMMES
+##Hommes
+```{r}
 itorse_m <- which(!is.na(match(torse, names(X_m))))
 names(X_m)[itorse_m] <-
    c("McirconférenceFessesTorse", "McirconférencePoitrineTorse",
@@ -319,10 +321,23 @@ names(X_m)[itorse_m] <-
      "MlargeurHancheTorse", "MlargeurNombrilTorse", "MprofondeurFesseTorse", "MarcFesseTorse")
 names(X_m)[grep("Torse", names(X_m))]
 
+###Corrélation
 T_m = cor(X_m[itorse_m])
 corrplot(T_m, order="hclust", method = 'color')
 
-####FEMMES
+###ACP
+
+tmp <- X_m[ , itorse_m]
+acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
+s.corcircle(acptmp$co, clabel = 0.5)
+
+###Boxplot
+
+
+```
+
+##Femmes
+```{r}
 itorse_f <- which(!is.na(match(torse, names(X_f))))
 names(X_f)[itorse_f] <-
    c("FcirconférenceFessesTorse", "FcirconférencePoitrineTorse",
@@ -335,11 +350,19 @@ names(X_f)[itorse_f] <-
      "FlargeurHancheTorse", "FlargeurNombrilTorse", "FprofondeurFesseTorse", "FarcFesseTorse")
 names(X_f)[grep("Torse", names(X_f))]
 
+###Corrélation
 T_f = cor(X_f[itorse_f])
 corrplot(T_f, order="hclust", method = 'color')
+
+###ACP
+
+
+###Boxplot
+
+
 ```
 
-# jambe
+#Jambe
 ```{r}
 jambe <- c("functionalleglength",
    "buttockkneelength", "buttockpopliteallength", "kneeheightsitting", "poplitealheight",
@@ -347,8 +370,10 @@ jambe <- c("functionalleglength",
    "tibialheight",
    "kneeheightmidpatella", "lateralfemoralepicondyleheight",
    "calfcircumference", "lowerthighcircumference", "thighcircumference")
+```
 
-####HOMMES
+##Hommes
+```{r}
 ijambe_m <- which(!is.na(match(jambe, names(X_m))))
 colnames(X_m)[ijambe_m] <-
    c("MlongueurJambe",
@@ -358,10 +383,21 @@ colnames(X_m)[ijambe_m] <-
    "MhauteurGenouDeboutJambe", "MhauteurGenouCotéJambe",
    "McirconférenceMolletJambe", "McirconférenceGenouJambe", "McirconférenceCuisseJambe")  
 names(X_m)[grep("Jambe", names(X_m))]
+
+###Corrélation
 jambe_m_cor = cor(X_m[ijambe_m])
 corrplot(jambe_m_cor,order="hclust", method = 'color')
 
-####FEMMES
+###ACP
+
+
+###Boxplot
+
+
+```
+
+##Femmes
+```{r}
 ijambe_f <- which(!is.na(match(jambe, names(X_f))))
 colnames(X_f)[ijambe_f] <-
    c("MlongueurJambe",
@@ -371,12 +407,20 @@ colnames(X_f)[ijambe_f] <-
    "MhauteurGenouDeboutJambe", "MhauteurGenouCotéJambe",
    "McirconférenceMolletJambe", "McirconférenceGenouJambe", "McirconférenceCuisseJambe")  
 names(X_f)[grep("Jambe", names(X_f))]
+
+###Corrélation
 jambe_f_cor = cor(X_f[ijambe_f])
 corrplot(jambe_f_cor,order="hclust", method = 'color')
 
+###ACP
+
+
+###Boxplot
+
+
 ```
 
-# stature
+#Stature
 ```{r}
 stature <- c("overheadfingertipreachsitting",
    "elbowrestheight", "eyeheightsitting", "sittingheight",
@@ -384,8 +428,10 @@ stature <- c("overheadfingertipreachsitting",
    "tenthribheight", "suprasternaleheight", "waistheightomphalion",
    "crotchheight", "buttockheight", "trochanterionheight",
    "stature", "cervicaleheight", "acromialheight", "wristheight")
+```
 
-####HOMMES
+##Hommes
+```{r}
 istature_m <- which(!is.na(match(stature, names(X_m))))
 colnames(X_m)[istature_m] <-
    c("MassisPlafondStature",
@@ -395,10 +441,21 @@ colnames(X_m)[istature_m] <-
    "MhauteurBasFesseStature", "MhauteurBoutFesseStature", "MhauteurHautFesseStature",
    "MtailleStature", "MhauteurCouStature", "MhauteurÉpauleStature", "MHauteurPoignetStature")
 names(X_m)[grep("Stature", names(X_m))]
+
+###Corrélation
 stature_m_cor = cor(X_m[istature_m])
 corrplot(stature_m_cor,order="hclust", method = 'color')
 
-####FEMMES
+###ACP
+
+
+###Boxplot
+
+
+```
+
+##Femmes
+```{r}
 istature_f <- which(!is.na(match(stature, names(X_f))))
 colnames(X_f)[istature_f] <-
    c("FassisPlafondStature",
@@ -408,8 +465,17 @@ colnames(X_f)[istature_f] <-
    "FhauteurBasFesseStature", "FhauteurBoutFesseStature", "FhauteurHautFesseStature",
    "FtailleStature", "FhauteurCouStature", "FhauteurÉpauleStature", "FhauteurPoignetStature")
 names(X_f)[grep("Stature", names(X_f))]
+
+###Corrélation
 stature_f_cor = cor(X_f[istature_f])
 corrplot(stature_f_cor, order="hclust", method = 'color')
+
+###ACP
+
+
+###Boxplot
+
+
 ```
 
 #autres variables
