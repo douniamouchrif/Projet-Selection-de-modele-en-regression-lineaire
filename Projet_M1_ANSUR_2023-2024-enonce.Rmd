@@ -98,89 +98,124 @@ title('Répartition de la variable Y')
 
 **Analyse descriptive**
 
-#main
 ```{r}
 library(corrplot)
+```
+
+#main
+```{r}
+main <- c("handbreadth", "handcircumference", "handlength", "palmlength")
+
 ####HOMMES
-main_m <- c("handbreadth", "handcircumference", "handlength", "palmlength")
-main_m <- na.omit(main_m)
-imain_m <- which(!is.na(match(main_m, names(X_m))))
+imain_m <- which(!is.na(match(main, names(X_m))))
 names(X_m)[imain_m] <- c("MlargeurMain", "McironférenceMain", "MlongueurMain", "MlongueurPaumeMain")
 names(X_m)[grep("Main", names(X_m))]
 
-M = cor(X_m[imain_m])
-corrplot(M, method = 'color')
+M_m = cor(X_m[imain_m])
+corrplot(M_m, order="hclust", method = 'color')
 
-# f
-main_f <- c("handbreadth", "handcircumference", "handlength", "palmlength")
-main_f <- na.omit(main_f)
-imain_f <- which(!is.na(match(main_f, names(X_f))))
+####FEMMES
+imain_f <- which(!is.na(match(main, names(X_f))))
 names(X_f)[imain_f] <- c("FlargeurMain", "FcironférenceMain", "FlongueurMain", "FlongueurPaumeMain")
 names(X_f)[grep("Main", names(X_f))]
 
-M = cor(X_f[imain_f])
-corrplot(M, method = 'color')
+M_f = cor(X_f[imain_f])
+corrplot(M_f, order="hclust", method = 'color')
 ```
 
 #pied
 ```{r}
-####HOMMES
 pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
-          "footbreadthhorizontal", "footlength", "heelbreadth",
-          "lateralmalleolusheight",
+          "footbreadthhorizontal", "footlength", "heelbreadth", "lateralmalleolusheight",
           "anklecircumference", "heelanklecircumference")
-pied <- na.omit(pied)
-ipied <- which(!is.na(match(pied, names(X_m))))
-names(X_m)[ipied] <-
+
+####HOMMES
+ipied_m <- which(!is.na(match(pied, names(X_m))))
+names(X_m)[ipied_m] <-
    c("MciconférencePied", "MlongueurArrièrePied", "MlargeurBimalléolairePied",
-          "MlargeurPied", "MlongueurPied", "MlargeurTalonPied",
-          "MhauteurMalléolairePied",
+     "MlargeurPied", "MlongueurPied", "MlargeurTalonPied", "MhauteurMalléolairePied",
      "McirconférenceChevillePied", "McirconférenceChevilleTalonPied")
 names(X_m)[grep("Pied", names(X_m))]
 
-M = cor(X_m[ipied])
-corrplot(M, method = 'color')
+P_m = cor(X_m[ipied_m])
+corrplot(P_m, order="hclust", method = 'color')
 
-# f
-pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
-          "footbreadthhorizontal", "footlength", "heelbreadth",
-          "lateralmalleolusheight",
-          "anklecircumference", "heelanklecircumference")
-pied <- na.omit(pied)
-ipied <- which(!is.na(match(pied, names(X_f))))
-names(X_f)[ipied] <-
+####FEMMES
+ipied_f <- which(!is.na(match(pied, names(X_f))))
+names(X_f)[ipied_f] <-
    c("FciconférencePied", "FlongueurArrièrePied", "FlargeurBimalléolairePied",
-          "FlargeurPied", "FlongueurPied", "FlargeurTalonPied",
-          "FhauteurMalléolairePied",
+     "FlargeurPied", "FlongueurPied", "FlargeurTalonPied", "FhauteurMalléolairePied",
      "FcirconférenceChevillePied", "FcirconférenceChevilleTalonPied")
 names(X_f)[grep("Pied", names(X_f))]
 
-M = cor(X_f[ipied])
-corrplot(M, method = 'color')
+P_f = cor(X_f[ipied_f])
+corrplot(P_f, order="hclust", method = 'color')
 ```
 
 #tete
 ```{r}
+tete <- c("bitragionchinarc", "bitragionsubmandibulararc", "bizygomaticbreadth",
+          "headbreadth", "headcircumference", "interpupillarybreadth", "earbreadth",
+          "earlength", "earprotrusion", "headlength", "mentonsellionlength",
+          "neckcircumference", "neckcircumferencebase", "tragiontopofhead")
 
+####HOMMES
+itete_m <- which(!is.na(match(tete, names(X_m))))
+names(X_m)[itete_m] <-
+  c("MarcMentonTête", "MarcCouTête", "MlargeurJouesTête", "MlargeurTête",
+    "McirconférenceTête", "MlargeurYeuxTête", "MlargeurOreilleTête",
+    "MlongueurOreilleTête", "MdécollementOreilleTête", "MlongueurTête",
+    "MlongueurMentonTête", "McirconférenceCouTête", "McirconférenceCouBaseTête",
+    "MhauteurTête")
+names(X_m)[grep("Tête", names(X_m))]
+
+T_m = cor(X_m[itete_m])
+corrplot(T_m, order="hclust", method = 'color')
+
+####FEMMES
+itete_f <- which(!is.na(match(tete, names(X_f))))
+names(X_f)[itete_f] <-
+  c("FarcMentonTête", "FarcCouTête", "FlargeurJouesTête", "FlargeurTête",
+    "FcirconférenceTête", "FlargeurYeuxTête", "FlargeurOreilleTête",
+    "FlongueurOreilleTête", "FdécollementOreilleTête", "FlongueurTête",
+    "FlongueurMentonTête", "FcirconférenceCouTête", "FcirconférenceCouBaseTête",
+    "FhauteurTête")
+names(X_f)[grep("Tête", names(X_f))]
+
+T_f = cor(X_f[itete_f])
+corrplot(T_f, order="hclust", method = 'color')
 ```
 
 #bras
 ```{r eval=TRUE, warning=FALSE, error = TRUE, message=FALSE}
+bras <- c("span", "sleevelengthspinewrist", "radialestylionlength", "sleeveoutseam",
+          "wristcircumference", "forearmhandlength", "forearmcenterofgriplength",
+          "thumbtipreach", "bicepscircumferenceflexed", "forearmcircumferenceflexed",
+          "acromionradialelength", "shoulderelbowlength")
+
 ####HOMMES
-bras <- c("span", "sleevelengthspinewrist", "radialestylionlength", "sleeveoutseam", "wristcircumference", "forearmhandlength", "forearmcenterofgriplength", "thumbtipreach", "bicepscircumferenceflexed", "forearmcircumferenceflexed", "acromionradialelength", "shoulderelbowlength")
-bras <- na.omit(bras)
+ibras_m <- which(!is.na(match(bras, names(X_m))))
+names(X_m)[ibras_m] <- 
+  c("MempanBras", "MlongueurMancheBras", "MlongueurAvantBras", "MlongueurMancheSeuleBras",
+    "McirconférencePoignetBras", "MlongueurAvantBrasMain", "MlongueurAvantBrasPoing",
+    "MlongueurDosPoingBras", "McirconférenceBicepsBras", "McirconférenceAvantBras",
+    "MlongueurArrièreBras", "MlongueurÉpauleCoudeBras")
+names(X_m)[grep("Bras", names(X_m))]
 
-ibras <- which(!is.na(match(bras, names(X_m))))
-
-names(X_m)[ibras] <- c("MempanBras", "MlongueurMancheBras", "MlongueurAvantBras", "MlongueurMancheSeuleBras", "McirconférencePoignetBras", "MlongueurAvantBrasMain", "MlongueurAvantBrasPoing", "MlongueurDosPoingBras", "McirconférenceBicepsBras", "McirconférenceAvantBras", "MlongueurArrièreBras", "MlongueurÉpauleCoudeBras")
-bras_names_m <- names(X_m)[grep("Bras", names(X_m))]
+B_m = cor(X_m[ibras_m])
+corrplot(B_m, order="hclust", method = 'color')
 
 ####FEMMES
-ibras <- which(!is.na(match(bras, names(X_f))))
+ibras_f <- which(!is.na(match(bras, names(X_f))))
+names(X_f)[ibras_f] <- 
+  c("FempanBras", "FlongueurMancheBras", "FlongueurAvantBras", "FlongueurMancheSeuleBras",
+    "FcirconférencePoignetBras", "FlongueurAvantBrasMain", "FlongueurAvantBrasPoing",
+    "FlongueurDosPoingBras", "FcirconférenceBicepsBras", "FcirconférenceAvantBras",
+    "FlongueurArrièreBras", "FlongueurÉpauleCoudeBras")
+names(X_f)[grep("Bras", names(X_f))]
 
-names(X_f)[ibras] <- c("FempanBras", "FlongueurMancheBras", "FlongueurAvantBras", "FlongueurMancheSeuleBras", "FcirconférencePoignetBras", "FlongueurAvantBrasMain", "FlongueurAvantBrasPoing", "FlongueurDosPoingBras", "FcirconférenceBicepsBras", "FcirconférenceAvantBras", "FlongueurArrièreBras", "FlongueurÉpauleCoudeBras")
-
-bras_names_f <- names(X_f)[grep("Bras", names(X_f))]
+B_f = cor(X_f[ibras_f])
+corrplot(B_f, order="hclust", method = 'color')
 ```  
 
 
@@ -200,7 +235,45 @@ summary(model_poids_bras_f)
 
 # tronc
 ```{r}
+torse <- c("buttockcircumference", "chestcircumference", "shouldercircumference",
+           "waistcircumference", "verticaltrunkcircumferenceusa", "waistdepth", "chestdepth",
+           "crotchlengthomphalion", "abdominalextensiondepthsitting", "shoulderlength",
+           "biacromialbreadth", "bideltoidbreadth", "forearmforearmbreadth",
+           "hipbreadthsitting", "waistfrontlengthsitting", "interscyei", "interscyeii",
+           "waistbacklength", "bicristalbreadth", "chestbreadth", "hipbreadth", 
+           "waistbreadth", "buttockdepth", "crotchlengthposterioromphalion")
 
+####HOMMES
+itorse_m <- which(!is.na(match(torse, names(X_m))))
+names(X_m)[itorse_m] <-
+   c("McirconférenceFessesTorse", "McirconférencePoitrineTorse",
+     "McirconférenceÉpauleTorse", "McirconférenceNombrilTorse",
+     "McirconférenceVerticaleTorse", "MprofondeurTorseDebout", "MprofondeurTorsePointrine",
+     "MarcTorseBas", "MprofondeurTorseAssis", "MlargeurÉpauleTorse",
+     "MlargeurÉpauleIntTorse", "MlargeurÉpauleExtTorse", "MlargeurCoudeCoudeTorse",
+     "MlargeurHanchesAssisTorse", "MlongueurTorse", "MlargeurDosITorse", "MlargeurDosIITorse",
+     "MhauteurDosTorse", "MlargeurDessusNombrilTorse", "MlargeurPoitrineTorse",
+     "MlargeurHancheTorse", "MlargeurNombrilTorse", "MprofondeurFesseTorse", "MarcFesseTorse")
+names(X_m)[grep("Torse", names(X_m))]
+
+T_m = cor(X_m[itorse_m])
+corrplot(T_m, order="hclust", method = 'color')
+
+####FEMMES
+itorse_f <- which(!is.na(match(torse, names(X_f))))
+names(X_f)[itorse_f] <-
+   c("FcirconférenceFessesTorse", "FcirconférencePoitrineTorse",
+     "FcirconférenceÉpauleTorse", "FcirconférenceNombrilTorse",
+     "FcirconférenceVerticaleTorse", "FprofondeurTorseDebout", "FprofondeurTorsePointrine",
+     "FarcTorseBas", "FprofondeurTorseAssis", "FlargeurÉpauleTorse",
+     "FlargeurÉpauleIntTorse", "FlargeurÉpauleExtTorse", "FlargeurCoudeCoudeTorse",
+     "FlargeurHanchesAssisTorse", "FlongueurTorse", "FlargeurDosITorse", "FlargeurDosIITorse",
+     "FhauteurDosTorse", "FlargeurDessusNombrilTorse", "FlargeurPoitrineTorse",
+     "FlargeurHancheTorse", "FlargeurNombrilTorse", "FprofondeurFesseTorse", "FarcFesseTorse")
+names(X_f)[grep("Torse", names(X_f))]
+
+T_f = cor(X_f[itorse_f])
+corrplot(T_f, order="hclust", method = 'color')
 ```
 
 # jambe
