@@ -278,63 +278,76 @@ corrplot(T_f, order="hclust", method = 'color')
 
 # jambe
 ```{r}
+jambe <- c("functionalleglength",
+   "buttockkneelength", "buttockpopliteallength", "kneeheightsitting", "poplitealheight",
+   "thighclearance",
+   "tibialheight",
+   "kneeheightmidpatella", "lateralfemoralepicondyleheight",
+   "calfcircumference", "lowerthighcircumference", "thighcircumference")
+
+ijambe_m <- which(!is.na(match(jambe, names(X_m))))
+colnames(X_m)[ijambe_m] <-
+   c("MlongueurJambe",
+   "MlongueurGenouFesseJambe", "MlongueurPoplitealFesseJambe", "MlongeurGenouJambe", "MlongueurPoplitealJambe",
+   "MépaisseurCuisseJambe",
+   "MlongueurTibiaJambe",
+   "MhauteurGenouDeboutJambe", "MhauteurGenouCotéJambe",
+   "McirconférenceMolletJambe", "McirconférenceGenouJambe", "McirconférenceCuisseJambe")  
+names(X_m)[grep("Jambe", names(X_m))]
+jambe_m_cor = cor(X_m[ijambe_m])
+corrplot(jambe_m_cor,order="hclust", method = 'color')
+
+####FEMMES
+ijambe_f <- which(!is.na(match(jambe, names(X_f))))
+colnames(X_f)[ijambe_f] <-
+   c("MlongueurJambe",
+   "MlongueurGenouFesseJambe", "MlongueurPoplitealFesseJambe", "MlongeurGenouJambe", "MlongueurPoplitealJambe",
+   "MépaisseurCuisseJambe",
+   "MlongueurTibiaJambe",
+   "MhauteurGenouDeboutJambe", "MhauteurGenouCotéJambe",
+   "McirconférenceMolletJambe", "McirconférenceGenouJambe", "McirconférenceCuisseJambe")  
+names(X_f)[grep("Jambe", names(X_f))]
+jambe_f_cor = cor(X_f[ijambe_f])
+corrplot(jambe_f_cor,order="hclust", method = 'color')
 
 ```
 
 # stature
 ```{r}
 library(corrplot)
-print('coucou dounia')
-####HOMMES
-statureM <- c("overheadfingertipreachsitting",
+
+stature <- c("overheadfingertipreachsitting",
    "elbowrestheight", "eyeheightsitting", "sittingheight",
    "axillaheight", "chestheight", "iliocristaleheight",
    "tenthribheight", "suprasternaleheight", "waistheightomphalion",
-   "crotchheight",
-   "buttockheight",
-   "trochanterionheight",
+   "crotchheight", "buttockheight", "trochanterionheight",
    "stature", "cervicaleheight", "acromialheight", "wristheight")
-statureM <- na.omit(statureM)
-istatureM <- which(!is.na(match(statureM, names(X_m))))
-colnames(X_m)[istatureM] <-
+
+####HOMMES
+istature_m <- which(!is.na(match(stature, names(X_m))))
+colnames(X_m)[istature_m] <-
    c("MassisPlafondStature",
    "MhauteurCoudeAssisStature", "MhauteurYeuxAssisStature", "MhauteurAssisStature",
    "MhauteurAisselleStature", "MhauteurPoitrineStature", "MhauteurPliCoudeStature",
    "MhauteurCôteStature", "MhauteurSternumStature", "MhauteurNombrilStature",
-   "MhauteurBasFesseStature",
-   "MhauteurBoutFesseStature",
-   "MhauteurHautFesseStature",
+   "MhauteurBasFesseStature", "MhauteurBoutFesseStature", "MhauteurHautFesseStature",
    "MtailleStature", "MhauteurCouStature", "MhauteurÉpauleStature", "MHauteurPoignetStature")
-stature_names_m <- names(X_m)[grep("Stature", names(X_m))]
-statureM_cor = cor(statureM)
-corrplot(StatureM_cor)
+names(X_m)[grep("Stature", names(X_m))]
+stature_m_cor = cor(X_m[istature_m])
+corrplot(stature_m_cor,order="hclust", method = 'color')
 
 ####FEMMES
- 
-statureF <- c("overheadfingertipreachsitting",
-   "elbowrestheight", "eyeheightsitting", "sittingheight",
-   "axillaheight", "chestheight", "iliocristaleheight",
-   "tenthribheight", "suprasternaleheight", "waistheightomphalion",
-   "crotchheight",
-   "buttockheight",
-   "trochanterionheight",
-   "stature", "cervicaleheight", "acromialheight", "wristheight")
-statureF <- na.omit(statureF)
-istatureF <- which(!is.na(match(statureF, names(X_f))))
-colnames(X_f)[istatureF] <-
-   c("MassisPlafondStature",
+istature_f <- which(!is.na(match(stature, names(X_f))))
+colnames(X_f)[istature_f] <-
+   c("FassisPlafondStature",
    "FhauteurCoudeAssisStature", "FhauteurYeuxAssisStature", "FhauteurAssisStature",
    "FhauteurAisselleStature", "FhauteurPoitrineStature", "FhauteurPliCoudeStature",
    "FhauteurCôteStature", "FhauteurSternumStature", "FhauteurNombrilStature",
-   "FhauteurBasFesseStature",
-   "FhauteurBoutFesseStature",
-   "FhauteurHautFesseStature",
+   "FhauteurBasFesseStature", "FhauteurBoutFesseStature", "FhauteurHautFesseStature",
    "FtailleStature", "FhauteurCouStature", "FhauteurÉpauleStature", "FhauteurPoignetStature")
-stature_names_f <- names(X_f)[grep("Stature", names(X_f))]
-
-statureF <- (X_m[, stature_names_f])
-statureF_cor = cor(statureF)
-corrplot(StatureF_cor)
+names(X_f)[grep("Stature", names(X_f))]
+stature_f_cor = cor(X_f[istature_f])
+corrplot(stature_f_cor, order="hclust", method = 'color')
 ```
 
 #autres variables
