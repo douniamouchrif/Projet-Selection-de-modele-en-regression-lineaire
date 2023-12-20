@@ -100,36 +100,56 @@ title('Répartition de la variable Y')
 
 ```{r}
 library(corrplot)
+library(ade4)
 ```
 
-#main
+#Main
 ```{r}
 main <- c("handbreadth", "handcircumference", "handlength", "palmlength")
-
-####HOMMES
+```
+##HOMMES
+```{r}
 imain_m <- which(!is.na(match(main, names(X_m))))
 names(X_m)[imain_m] <- c("MlargeurMain", "McironférenceMain", "MlongueurMain", "MlongueurPaumeMain")
 names(X_m)[grep("Main", names(X_m))]
 
+###Corrélation
 M_m = cor(X_m[imain_m])
 corrplot(M_m, order="hclust", method = 'color')
 
-####FEMMES
+###ACP
+tmpMM <- X_m[ , imain_m]
+acp_m_m <- dudi.pca(tmpMM, scannf = FALSE, scale = FALSE)
+s.corcircle(acp_m_m$co, clabel = 0.5)
+
+###Boxplot
+
+```
+##FEMMES
+```{r}
 imain_f <- which(!is.na(match(main, names(X_f))))
 names(X_f)[imain_f] <- c("FlargeurMain", "FcironférenceMain", "FlongueurMain", "FlongueurPaumeMain")
 names(X_f)[grep("Main", names(X_f))]
 
+###Corrélation
 M_f = cor(X_f[imain_f])
 corrplot(M_f, order="hclust", method = 'color')
+
+###ACP
+tmpMF <- X_f[ , imain_f]
+acp_m_f <- dudi.pca(tmpMF, scannf = FALSE, scale = FALSE)
+s.corcircle(acp_m_f$co, clabel = 0.5)
 ```
 
-#pied
+
+#Pied
 ```{r}
 pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
           "footbreadthhorizontal", "footlength", "heelbreadth", "lateralmalleolusheight",
           "anklecircumference", "heelanklecircumference")
-
-####HOMMES
+```
+##HOMMES
+```{r}
 ipied_m <- which(!is.na(match(pied, names(X_m))))
 names(X_m)[ipied_m] <-
    c("MciconférencePied", "MlongueurArrièrePied", "MlargeurBimalléolairePied",
@@ -137,10 +157,17 @@ names(X_m)[ipied_m] <-
      "McirconférenceChevillePied", "McirconférenceChevilleTalonPied")
 names(X_m)[grep("Pied", names(X_m))]
 
+###Corrélation
 P_m = cor(X_m[ipied_m])
 corrplot(P_m, order="hclust", method = 'color')
 
-####FEMMES
+###ACP
+tmpPM <- X_m[ , ipied_m]
+acp_p_m <- dudi.pca(tmpPM, scannf = FALSE, scale = FALSE)
+s.corcircle(acp_p_m$co, clabel = 0.5)
+```
+##FEMMES
+```{r}
 ipied_f <- which(!is.na(match(pied, names(X_f))))
 names(X_f)[ipied_f] <-
    c("FciconférencePied", "FlongueurArrièrePied", "FlargeurBimalléolairePied",
@@ -148,18 +175,26 @@ names(X_f)[ipied_f] <-
      "FcirconférenceChevillePied", "FcirconférenceChevilleTalonPied")
 names(X_f)[grep("Pied", names(X_f))]
 
+###Corrélation
 P_f = cor(X_f[ipied_f])
 corrplot(P_f, order="hclust", method = 'color')
+
+###ACP
+tmpPF <- X_f[ , ipied_f]
+acp_p_f <- dudi.pca(tmpPF, scannf = FALSE, scale = FALSE)
+s.corcircle(acp_p_f$co, clabel = 0.5)
 ```
 
-#tete
+
+#Tete
 ```{r}
 tete <- c("bitragionchinarc", "bitragionsubmandibulararc", "bizygomaticbreadth",
           "headbreadth", "headcircumference", "interpupillarybreadth", "earbreadth",
           "earlength", "earprotrusion", "headlength", "mentonsellionlength",
           "neckcircumference", "neckcircumferencebase", "tragiontopofhead")
-
-####HOMMES
+```
+##HOMMES
+```{r}
 itete_m <- which(!is.na(match(tete, names(X_m))))
 names(X_m)[itete_m] <-
   c("MarcMentonTête", "MarcCouTête", "MlargeurJouesTête", "MlargeurTête",
@@ -169,10 +204,17 @@ names(X_m)[itete_m] <-
     "MhauteurTête")
 names(X_m)[grep("Tête", names(X_m))]
 
+###Corrélation
 T_m = cor(X_m[itete_m])
 corrplot(T_m, order="hclust", method = 'color')
 
-####FEMMES
+###ACP
+tmpTM <- X_m[ , itete_m]
+acp_t_m <- dudi.pca(tmpTM, scannf = FALSE, scale = FALSE)
+s.corcircle(acp_t_m$co, clabel = 0.5)
+```
+##FEMMES
+```{r}
 itete_f <- which(!is.na(match(tete, names(X_f))))
 names(X_f)[itete_f] <-
   c("FarcMentonTête", "FarcCouTête", "FlargeurJouesTête", "FlargeurTête",
@@ -182,18 +224,26 @@ names(X_f)[itete_f] <-
     "FhauteurTête")
 names(X_f)[grep("Tête", names(X_f))]
 
+###Corrélation
 T_f = cor(X_f[itete_f])
 corrplot(T_f, order="hclust", method = 'color')
+
+###ACP
+tmpTF <- X_f[ , itete_f]
+acp_t_f <- dudi.pca(tmpTF, scannf = FALSE, scale = FALSE)
+s.corcircle(acp_t_f$co, clabel = 0.5)
 ```
 
-#bras
-```{r eval=TRUE, warning=FALSE, error = TRUE, message=FALSE}
+
+#Bras
+```{r}
 bras <- c("span", "sleevelengthspinewrist", "radialestylionlength", "sleeveoutseam",
           "wristcircumference", "forearmhandlength", "forearmcenterofgriplength",
           "thumbtipreach", "bicepscircumferenceflexed", "forearmcircumferenceflexed",
           "acromionradialelength", "shoulderelbowlength")
-
-####HOMMES
+```
+##HOMMES
+```{r}
 ibras_m <- which(!is.na(match(bras, names(X_m))))
 names(X_m)[ibras_m] <- 
   c("MempanBras", "MlongueurMancheBras", "MlongueurAvantBras", "MlongueurMancheSeuleBras",
@@ -202,10 +252,17 @@ names(X_m)[ibras_m] <-
     "MlongueurArrièreBras", "MlongueurÉpauleCoudeBras")
 names(X_m)[grep("Bras", names(X_m))]
 
+###Corrélation
 B_m = cor(X_m[ibras_m])
 corrplot(B_m, order="hclust", method = 'color')
 
-####FEMMES
+###ACP
+tmpBM <- X_m[ , ibras_m]
+acp_b_m <- dudi.pca(tmpBM, scannf = FALSE, scale = FALSE)
+s.corcircle(acp_b_m$co, clabel = 0.5)
+```
+##FEMMES
+```{r}
 ibras_f <- which(!is.na(match(bras, names(X_f))))
 names(X_f)[ibras_f] <- 
   c("FempanBras", "FlongueurMancheBras", "FlongueurAvantBras", "FlongueurMancheSeuleBras",
@@ -214,8 +271,14 @@ names(X_f)[ibras_f] <-
     "FlongueurArrièreBras", "FlongueurÉpauleCoudeBras")
 names(X_f)[grep("Bras", names(X_f))]
 
+###Corrélation
 B_f = cor(X_f[ibras_f])
 corrplot(B_f, order="hclust", method = 'color')
+
+###ACP
+tmpBF <- X_f[ , ibras_f]
+acp_b_f <- dudi.pca(tmpBF, scannf = FALSE, scale = FALSE)
+s.corcircle(acp_b_f$co, clabel = 0.5)
 ```  
 
 
