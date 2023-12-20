@@ -326,7 +326,6 @@ T_m = cor(X_m[itorse_m])
 corrplot(T_m, order="hclust", method = 'color')
 
 ###ACP
-
 tmp <- X_m[ , itorse_m]
 acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
 s.corcircle(acptmp$co, clabel = 0.5)
@@ -355,7 +354,9 @@ T_f = cor(X_f[itorse_f])
 corrplot(T_f, order="hclust", method = 'color')
 
 ###ACP
-
+tmp <- X_f[ , itorse_f]
+acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
+s.corcircle(acptmp$co, clabel = 0.5)
 
 ###Boxplot
 
@@ -389,7 +390,9 @@ jambe_m_cor = cor(X_m[ijambe_m])
 corrplot(jambe_m_cor,order="hclust", method = 'color')
 
 ###ACP
-
+tmp <- X_m[ , ijambe_m]
+acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
+s.corcircle(acptmp$co, clabel = 0.5)
 
 ###Boxplot
 
@@ -413,7 +416,9 @@ jambe_f_cor = cor(X_f[ijambe_f])
 corrplot(jambe_f_cor,order="hclust", method = 'color')
 
 ###ACP
-
+tmp <- X_f[ , ijambe_f]
+acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
+s.corcircle(acptmp$co, clabel = 0.5)
 
 ###Boxplot
 
@@ -447,7 +452,9 @@ stature_m_cor = cor(X_m[istature_m])
 corrplot(stature_m_cor,order="hclust", method = 'color')
 
 ###ACP
-
+tmp <- X_m[ , istature_m]
+acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
+s.corcircle(acptmp$co, clabel = 0.5)
 
 ###Boxplot
 
@@ -471,6 +478,9 @@ stature_f_cor = cor(X_f[istature_f])
 corrplot(stature_f_cor, order="hclust", method = 'color')
 
 ###ACP
+tmp <- X_f[ , istature_f]
+acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
+s.corcircle(acptmp$co, clabel = 0.5)
 
 
 ###Boxplot
