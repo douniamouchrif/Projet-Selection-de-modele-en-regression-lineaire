@@ -564,12 +564,12 @@ grid.arrange(bp1_jambe_m,bp1_jambe_f,ncol = 2, top = textGrob("Boites à moustac
 ####Largeurs Dos-Torse
 bp2_jambe_m <- ggplot(X_m, aes(x=factor("."), y=MhauteurGenouDeboutJambe)) + labs(title="Boite à moustaches de la Hauteur Genou Debout Jambe",
            x ="", y = "Hauteur Genou Debout Jambe - Homme") + geom_boxplot(width = 0.5) +
-  coord_cartesian(ylim = c(350,650))
+  coord_cartesian(ylim = c(275,500))
 
 
 bp2_jambe_f <- ggplot(X_f, aes(x=factor("."), y=FhauteurGenouDeboutJambe)) + labs(title="Boite à moustaches de la Hauteur Genou Debout Jambe",
            x ="", y = "Hauteur Genou Debout Jambe - Femme") + geom_boxplot(width = 0.5)+
-  coord_cartesian(ylim = c(350, 650))
+  coord_cartesian(ylim = c(275, 500))
 
 grid.arrange(bp2_jambe_m,bp2_jambe_f,ncol = 2, top = textGrob("Boites à moustaches de la Hauteur Genou Debout Jambe"))
 ```
@@ -666,9 +666,42 @@ grid.arrange(bp2_stature_m,bp2_stature_f,ncol = 2, top = textGrob("Boites à mou
 
 **Sélection de modèle**
 
+#Séléction d'un petit nombre de variables par la corrélation
+```{r}
+correlations_m <- cor(Y_m, X_m)
+selected_columns_m <- which(correlations_m > 0.8)
+X_m_selected <- X_m[, selected_columns_m]
+print(X_m_selected)
+
+correlations_f <- cor(Y_f, X_f)
+selected_columns_f <- which(correlations_f > 0.8)
+X_f_selected <- X_f[, selected_columns_f]
+print(X_f_selected)
+
+#on retient 20 variables pour les hommes et 15 pour les femmes
+```
+
+
 # Premère façon : AIC
 ```{r}
+library(MASS)
+# Modèle complet avec 92 variables (trop long)
+#model_complet_m <- lm(Y_m ~ .,data=X_m)
+#stepAIC(model_complet,direction="backward")
 
+####HOMMES
+# Modèle complet avec 20 variables
+model_complet_m <- lm(Y_m ~ .,data=X_m_selected)
+stepAIC(model_complet_m,direction="backward")
+
+#on obtient un modèle à 15 variables 
+
+####FEMMES
+# Modèle complet avec 15 variables
+model_complet_f <- lm(Y_f ~ .,data=X_f_selected)
+stepAIC(model_complet_f,direction="backward")
+
+#on obtient un modèle à 11 variables
 ```
 
 
