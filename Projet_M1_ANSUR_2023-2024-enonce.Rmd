@@ -337,55 +337,78 @@ torse <- c("buttockcircumference", "chestcircumference", "shouldercircumference"
 ```{r}
 itorse_m <- which(!is.na(match(torse, names(X_m))))
 names(X_m)[itorse_m] <-
-   c("McirconférenceFessesTorse", "McirconférencePoitrineTorse",
-     "McirconférenceÉpauleTorse", "McirconférenceNombrilTorse",
-     "McirconférenceVerticaleTorse", "MprofondeurTorseDebout", "MprofondeurTorsePointrine",
-     "MarcTorseBas", "MprofondeurTorseAssis", "MlargeurÉpauleTorse",
-     "MlargeurÉpauleIntTorse", "MlargeurÉpauleExtTorse", "MlargeurCoudeCoudeTorse",
+   c("McirconferenceFessesTorse", "McirconferencePoitrineTorse",
+     "McirconferenceEpauleTorse", "McircoeferenceNombrilTorse",
+     "McirconferenceVerticaleTorse", "MprofondeurTorseDebout", "MprofondeurTorsePointrine",
+     "MarcTorseBas", "MprofondeurTorseAssis", "MlargeurEpauleTorse",
+     "MlargeurEpauleIntTorse", "MlargeurEpauleExtTorse", "MlargeurCoudeCoudeTorse",
      "MlargeurHanchesAssisTorse", "MlongueurTorse", "MlargeurDosITorse", "MlargeurDosIITorse",
      "MhauteurDosTorse", "MlargeurDessusNombrilTorse", "MlargeurPoitrineTorse",
      "MlargeurHancheTorse", "MlargeurNombrilTorse", "MprofondeurFesseTorse", "MarcFesseTorse")
 names(X_m)[grep("Torse", names(X_m))]
 
 ###Corrélation
-T_m = cor(X_m[itorse_m])
-corrplot(T_m, order="hclust", method = 'color')
+torse_cor_m = cor(X_m[itorse_m])
+corrplot(torse_cor_m, order="hclust", method = 'color')
 
 ###ACP
 tmp <- X_m[ , itorse_m]
 acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
 s.corcircle(acptmp$co, clabel = 0.5)
-
-###Boxplot
-
-
 ```
 
 ##Femmes
 ```{r}
 itorse_f <- which(!is.na(match(torse, names(X_f))))
 names(X_f)[itorse_f] <-
-   c("FcirconférenceFessesTorse", "FcirconférencePoitrineTorse",
-     "FcirconférenceÉpauleTorse", "FcirconférenceNombrilTorse",
-     "FcirconférenceVerticaleTorse", "FprofondeurTorseDebout", "FprofondeurTorsePointrine",
-     "FarcTorseBas", "FprofondeurTorseAssis", "FlargeurÉpauleTorse",
-     "FlargeurÉpauleIntTorse", "FlargeurÉpauleExtTorse", "FlargeurCoudeCoudeTorse",
+   c("FcirconferenceFessesTorse", "FcirconferencePoitrineTorse",
+     "FcirconferenceEpauleTorse", "FcirconferenceNombrilTorse",
+     "FcirconferenceVerticaleTorse", "FprofondeurTorseDebout", "FprofondeurTorsePointrine",
+     "FarcTorseBas", "FprofondeurTorseAssis", "FlargeurEpauleTorse",
+     "FlargeurEpauleIntTorse", "FlargeurÉpauleExtTorse", "FlargeurCoudeCoudeTorse",
      "FlargeurHanchesAssisTorse", "FlongueurTorse", "FlargeurDosITorse", "FlargeurDosIITorse",
      "FhauteurDosTorse", "FlargeurDessusNombrilTorse", "FlargeurPoitrineTorse",
      "FlargeurHancheTorse", "FlargeurNombrilTorse", "FprofondeurFesseTorse", "FarcFesseTorse")
 names(X_f)[grep("Torse", names(X_f))]
 
 ###Corrélation
-T_f = cor(X_f[itorse_f])
-corrplot(T_f, order="hclust", method = 'color')
+torse_cor_f = cor(X_f[itorse_f])
+corrplot(torse_cor_f, order="hclust", method = 'color')
 
 ###ACP
 tmp <- X_f[ , itorse_f]
 acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
 s.corcircle(acptmp$co, clabel = 0.5)
 
-###Boxplot
+```
 
+##HOMMES-FEMMES
+```{r}
+library(grid)
+###Boxplot
+####Longueur Torse
+bp1_torse_m <- ggplot(X_m, aes(x=factor("."), y=MlongueurTorse)) + labs(title="Boite à moustaches de la longueur du torse",
+           x ="", y = "Longueur du torse - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(115, 175))
+
+
+bp1_torse_f <- ggplot(X_f, aes(x=factor("."), y=FlongueurTorse)) + labs(title="Boite à moustaches de la longueurdu torse",
+           x ="", y = "Longueur du torse - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(115, 175))
+
+grid.arrange(bp1_torse_m,bp1_torse_f,ncol = 2, top = textGrob("Boites à moustaches de la longueur du torse"))
+
+####circonferenceEpauleTorse
+bp2_torse_m <- ggplot(X_m, aes(x=factor("."), y=McirconferenceEpauleTorse)) + labs(title="Boite à moustaches de la Circonference Epaule Torse",
+           x ="", y = "Circonference Epaule Torse - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(250,400))
+
+
+bp2_torse_f <- ggplot(X_f, aes(x=factor("."), y=FcirconferenceEpauleTorse)) + labs(title="Boite à moustaches de la Circonference Epaule Torse",
+           x ="", y = "Circonference Epaule Torse - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(250, 400))
+
+grid.arrange(bp2_torse_m,bp2_torse_f,ncol = 2, top = textGrob("Boites à moustaches de la Circonference Epaule Torse"))
 
 ```
 
@@ -405,10 +428,10 @@ ijambe_m <- which(!is.na(match(jambe, names(X_m))))
 colnames(X_m)[ijambe_m] <-
    c("MlongueurJambe",
    "MlongueurGenouFesseJambe", "MlongueurPoplitealFesseJambe", "MlongeurGenouJambe", "MlongueurPoplitealJambe",
-   "MépaisseurCuisseJambe",
+   "MepaisseurCuisseJambe",
    "MlongueurTibiaJambe",
-   "MhauteurGenouDeboutJambe", "MhauteurGenouCotéJambe",
-   "McirconférenceMolletJambe", "McirconférenceGenouJambe", "McirconférenceCuisseJambe")  
+   "MhauteurGenouDeboutJambe", "MhauteurGenouCoteJambe",
+   "McirconferenceMolletJambe", "McirconferenceGenouJambe", "McirconferenceCuisseJambe")  
 names(X_m)[grep("Jambe", names(X_m))]
 
 ###Corrélation
@@ -431,10 +454,10 @@ ijambe_f <- which(!is.na(match(jambe, names(X_f))))
 colnames(X_f)[ijambe_f] <-
    c("FlongueurJambe",
    "FlongueurGenouFesseJambe", "FlongueurPoplitealFesseJambe", "FlongeurGenouJambe", "FlongueurPoplitealJambe",
-   "FépaisseurCuisseJambe",
+   "FepaisseurCuisseJambe",
    "FlongueurTibiaJambe",
-   "FhauteurGenouDeboutJambe", "FhauteurGenouCotéJambe",
-   "FcirconférenceMolletJambe", "FcirconférenceGenouJambe", "FcirconférenceCuisseJambe")  
+   "FhauteurGenouDeboutJambe", "FhauteurGenouCoteJambe",
+   "FcirconferenceMolletJambe", "FcirconferenceGenouJambe", "FcirconferenceCuisseJambe")  
 names(X_f)[grep("Jambe", names(X_f))]
 
 ###Corrélation
@@ -445,10 +468,35 @@ corrplot(jambe_f_cor,order="hclust", method = 'color')
 tmp <- X_f[ , ijambe_f]
 acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
 s.corcircle(acptmp$co, clabel = 0.5)
+```
 
+##HOMMES-FEMMES
+```{r}
+library(grid)
 ###Boxplot
+####Longueur Torse
+bp1_jambe_m <- ggplot(X_m, aes(x=factor("."), y=MlongueurTibiaJambe)) + labs(title="Boite à moustaches de la longueur du Tibia Jambe",
+           x ="", y = "Longueur Tibia Jambe - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(200, 500))
 
 
+bp1_jambe_f <- ggplot(X_f, aes(x=factor("."), y=FlongueurTibiaJambe)) + labs(title="Boite à moustaches de la Longueur Tibia Jambe",
+           x ="", y = "Longueur Tibia Jambe - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(200, 500))
+
+grid.arrange(bp1_jambe_m,bp1_jambe_f,ncol = 2, top = textGrob("Boites à moustaches de la longueur du Tibia Jambe"))
+
+####Largeurs Dos-Torse
+bp2_jambe_m <- ggplot(X_m, aes(x=factor("."), y=MhauteurGenouDeboutJambe)) + labs(title="Boite à moustaches de la Hauteur Genou Debout Jambe",
+           x ="", y = "Hauteur Genou Debout Jambe - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(350,650))
+
+
+bp2_jambe_f <- ggplot(X_f, aes(x=factor("."), y=FhauteurGenouDeboutJambe)) + labs(title="Boite à moustaches de la Hauteur Genou Debout Jambe",
+           x ="", y = "Hauteur Genou Debout Jambe - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(350, 650))
+
+grid.arrange(bp2_jambe_m,bp2_jambe_f,ncol = 2, top = textGrob("Boites à moustaches de la Hauteur Genou Debout Jambe"))
 ```
 
 #Stature
@@ -468,9 +516,9 @@ colnames(X_m)[istature_m] <-
    c("MassisPlafondStature",
    "MhauteurCoudeAssisStature", "MhauteurYeuxAssisStature", "MhauteurAssisStature",
    "MhauteurAisselleStature", "MhauteurPoitrineStature", "MhauteurPliCoudeStature",
-   "MhauteurCôteStature", "MhauteurSternumStature", "MhauteurNombrilStature",
+   "MhauteurCoteStature", "MhauteurSternumStature", "MhauteurNombrilStature",
    "MhauteurBasFesseStature", "MhauteurBoutFesseStature", "MhauteurHautFesseStature",
-   "MtailleStature", "MhauteurCouStature", "MhauteurÉpauleStature", "MHauteurPoignetStature")
+   "MtailleStature", "MhauteurCouStature", "MhauteurEpauleStature", "MHauteurPoignetStature")
 names(X_m)[grep("Stature", names(X_m))]
 
 ###Corrélation
@@ -482,9 +530,6 @@ tmp <- X_m[ , istature_m]
 acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
 s.corcircle(acptmp$co, clabel = 0.5)
 
-###Boxplot
-
-
 ```
 
 ##Femmes
@@ -494,9 +539,9 @@ colnames(X_f)[istature_f] <-
    c("FassisPlafondStature",
    "FhauteurCoudeAssisStature", "FhauteurYeuxAssisStature", "FhauteurAssisStature",
    "FhauteurAisselleStature", "FhauteurPoitrineStature", "FhauteurPliCoudeStature",
-   "FhauteurCôteStature", "FhauteurSternumStature", "FhauteurNombrilStature",
+   "FhauteurCoteStature", "FhauteurSternumStature", "FhauteurNombrilStature",
    "FhauteurBasFesseStature", "FhauteurBoutFesseStature", "FhauteurHautFesseStature",
-   "FtailleStature", "FhauteurCouStature", "FhauteurÉpauleStature", "FhauteurPoignetStature")
+   "FtailleStature", "FhauteurCouStature", "FhauteurEpauleStature", "FhauteurPoignetStature")
 names(X_f)[grep("Stature", names(X_f))]
 
 ###Corrélation
@@ -507,11 +552,35 @@ corrplot(stature_f_cor, order="hclust", method = 'color')
 tmp <- X_f[ , istature_f]
 acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
 s.corcircle(acptmp$co, clabel = 0.5)
+```
 
-
+##HOMMES-FEMMES
+```{r}
+library(grid)
 ###Boxplot
+####hauteurCoteStature
+bp1_stature_m <- ggplot(X_m, aes(x=factor("."), y=MhauteurCoteStature)) + labs(title="Boite à moustaches de la hauteur Cote Stature",
+           x ="", y = "Hauteur Cote Stature - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(200, 500))
 
 
+bp1_stature_f <- ggplot(X_f, aes(x=factor("."), y=FhauteurCoteStature)) + labs(title="Boite à moustaches de la hauteur Cote Stature",
+           x ="", y = "Hauteur Cote Stature - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(200, 500))
+
+grid.arrange(bp1_stature_m,bp1_stature_f,ncol = 2, top = textGrob("Boites à moustaches de la hauteur hauteur Cote Stature"))
+
+####hauteurNombrilStature
+bp2_stature_m <- ggplot(X_m, aes(x=factor("."), y=MhauteurNombrilStature)) + labs(title="Boite à moustaches de la hauteur Nombril Stature",
+           x ="", y = "Hauteur Nombril Stature - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(350,650))
+
+
+bp2_stature_f <- ggplot(X_f, aes(x=factor("."), y=FhauteurNombrilStature)) + labs(title="Boite à moustaches de la hauteur Nombril Stature",
+           x ="", y = "Hauteur Nombril Stature - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(350, 650))
+
+grid.arrange(bp2_stature_m,bp2_stature_f,ncol = 2, top = textGrob("Boites à moustaches de la hauteur Nombril Stature"))
 ```
 
 #autres variables
