@@ -666,7 +666,19 @@ grid.arrange(bp2_stature_m,bp2_stature_f,ncol = 2, top = textGrob("Boites à mou
 
 **Sélection de modèle**
 
-A compléter.
+# Premère façon : AIC
+```{r}
+
+```
+
+
+# Deuxième façon : BIC
+```{r}
+
+```
+
+
+# Troisième façon : lm() à la main + matrices de corrélation
 ```{r}
 library(car)
 mod = lm...  
