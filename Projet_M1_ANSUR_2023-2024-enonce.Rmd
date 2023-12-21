@@ -460,7 +460,6 @@ s.corcircle(acptmp$co, clabel = 0.5)
 
 ##HOMMES-FEMMES
 ```{r}
-library(grid)
 ###Boxplot
 ####Longueur Torse
 bp1_torse_m <- ggplot(X_m, aes(x=factor("."), y=MlongueurTorse)) + labs(title="Boite à moustaches de la longueur du torse",
