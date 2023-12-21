@@ -104,6 +104,7 @@ library(ade4)
 library(ggplot2)
 library(gridExtra)
 library(grid)
+library(MASS)
 ```
 
 #Main
@@ -651,6 +652,9 @@ grid.arrange(bp2_stature_m,bp2_stature_f,ncol = 2, top = textGrob("Boites à mou
 
 **Sélection de modèle**
 
+Dans le but de trouver un modèle pour expliquer la variable poid, nous avons utilisé plusieurs méthodes.
+
+
 # Séléction d'un petit nombre de variables par la corrélation
 ```{r}
 correlations_m <- cor(Y_m, X_m)
@@ -667,25 +671,22 @@ print(X_f_selected)
 ```
 
 
-# Premère façon : AIC
-```{r}
-library(MASS)
-# Modèle complet avec 92 variables (trop long)
-#model_complet_m <- lm(Y_m ~ .,data=X_m)
-#stepAIC(model_complet,direction="backward")
+# Premère façon : AIC (méthode desendante)
 
-####HOMMES
+###HOMMES
+```{r}
 # Modèle complet avec 20 variables
 model_complet_m <- lm(Y_m ~ .,data=X_m_selected)
-stepAIC(model_complet_m,direction="backward")
-
+model_backward_m <- stepAIC(model_complet_m,direction="backward")
 #on obtient un modèle à 15 variables 
 
-####FEMMES
+```
+
+###FEMMES
+```{r}
 # Modèle complet avec 15 variables
 model_complet_f <- lm(Y_f ~ .,data=X_f_selected)
-stepAIC(model_complet_f,direction="backward")
-
+model_backward_f <- stepAIC(model_complet_f,direction="backward")
 #on obtient un modèle à 11 variables
 ```
 
@@ -776,12 +777,39 @@ summary(mod_f2)
 
 # Troisième façon : BIC
 
+Nous allons maintenant chercher quel modèle est le meilleur parmis celui trouvé par le critère de l'AIC et celui trouvé par la méthode de régression lm() pour chaque genre pour expliquer le poid. 
+
 ```{r}
-'# Comparaison des modèles
-if (BIC(modele1) < BIC(modele2)) {
-  print("Le modèle 1 est préférable.")
+# Comparaison des modèles hommes
+if (BIC(model_backward_m) < BIC(mod_m6)) {
+  print("Le modèle trouvé par le critère AIC est préférable pour les hommes.")
 } else {
-  print("Le modèle 2 est préférable.")
-}'
+  print("Le modèle trouvé par la methode de régression lm() est préférable pour les hommes")
+}
+
+# Comparaison des modèles femmes
+if (BIC(model_backward_f) < BIC(mod_f2)) {
+  print("Le modèle trouvé par le critère AIC est préférable pour les femmes")
+} else {
+  print("Le modèle trouvé par la methode de régression lm() est préférable pour les femmes")
+}
+
 ```
+
+#Courbe ROC
+
+```{r}
+#peut être faire les courbes roc pour chaque modèle ?? comme le prof demande des grphiques et tableau ?
+#peut etre separer nos données en 2 echantillon test et train ?? psk la on a forcement une aire de 1 sous la courbe
+#jsp si c'est pertiant mais comme il veux des graphique je vois pas quoi faire d'autre 
+
+prediction <- predict(model_backward_m, X_m)
+library(pROC)
+roc_curve <- roc(Y_m, prediction)
+auc(roc_curve)
+plot(roc_curve)
+```
+
+
+
 
