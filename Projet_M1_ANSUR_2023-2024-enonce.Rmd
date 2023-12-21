@@ -651,7 +651,7 @@ grid.arrange(bp2_stature_m,bp2_stature_f,ncol = 2, top = textGrob("Boites à mou
 
 **Sélection de modèle**
 
-#Séléction d'un petit nombre de variables par la corrélation
+# Séléction d'un petit nombre de variables par la corrélation
 ```{r}
 correlations_m <- cor(Y_m, X_m)
 selected_columns_m <- which(correlations_m > 0.8)
@@ -690,19 +690,8 @@ stepAIC(model_complet_f,direction="backward")
 ```
 
 
-# Deuxième façon : BIC
-##HOMMES
-```{r}
-'# Comparaison des modèles
-if (BIC(modele1) < BIC(modele2)) {
-  print("Le modèle 1 est préférable.")
-} else {
-  print("Le modèle 2 est préférable.")
-}'
-```
+# Deuxième façon : lm() à la main
 
-
-# Troisième façon : lm() à la main
 ## On part de la totalité des 92 variables
 ```{r}
 'library(car)
@@ -750,18 +739,8 @@ mod_m3 <- lm(Y_m ~ abdominalextensiondepthsitting + acromialheight + acromionrad
 Conclusion pour cette façon : pas pertinent de le faire à la main en partant de la totalité des variables car on part d'un très gros nombre (92) et cela devient très vite illisible et perte de temps lorsqu'il existe déjà des fonctions pouvant trouver de meilleurs modèles tout en étant pertinent.
 
 ## On part d'un nombre de variables réduit, qui ont chacune une corrélation supérieure à 0,8 avec la variable Poids.
-```{r}
-correlations_m <- cor(Y_m, X_m)
-selected_columns_m <- which(correlations_m > 0.8)
-X_m_selected <- X_m[, selected_columns_m]
 
-correlations_f <- cor(Y_f, X_f)
-selected_columns_f <- which(correlations_f > 0.8)
-X_f_selected <- X_f[, selected_columns_f]
-# on supprimera les codes du dessus après
-```
-
-##HOMMES
+###HOMMES
 ```{r}
 mod_m4 <- lm(Y_m ~ . , data = X_m_selected)
 #summary(mod_m4)
@@ -782,7 +761,7 @@ mod_m6 <- lm(Y_m ~ buttockcircumference + buttockdepth + calfcircumference +
 summary(mod_m6)
 ```
 
-##FEMMES
+###FEMMES
 ```{r}
 mod_f1 <- lm(Y_f ~ . , data = X_f_selected)
 #summary(mod_f1)
@@ -792,5 +771,17 @@ mod_f2 <- lm(Y_f ~ bicepscircumferenceflexed + buttockcircumference + chestcircu
                shouldercircumference + thighclearance + verticaltrunkcircumferenceusa +
                waistcircumference, data = X_f_selected)
 summary(mod_f2)
+```
+
+
+# Troisième façon : BIC
+
+```{r}
+'# Comparaison des modèles
+if (BIC(modele1) < BIC(modele2)) {
+  print("Le modèle 1 est préférable.")
+} else {
+  print("Le modèle 2 est préférable.")
+}'
 ```
 
