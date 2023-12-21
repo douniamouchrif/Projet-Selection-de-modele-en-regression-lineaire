@@ -103,6 +103,7 @@ library(corrplot)
 library(ade4)
 library(ggplot2)
 library(gridExtra)
+library(grid)
 ```
 
 #Main
@@ -112,7 +113,7 @@ main <- c("handbreadth", "handcircumference", "handlength", "palmlength")
 ##HOMMES
 ```{r}
 imain_m <- which(!is.na(match(main, names(X_m))))
-names(X_m)[imain_m] <- c("MlargeurMain", "Mcironf́erenceMain", "MlongueurMain", "MlongueurPaumeMain")
+names(X_m)[imain_m] <- c("MlargeurMain", "McirconferenceMain", "MlongueurMain", "MlongueurPaumeMain")
 names(X_m)[grep("Main", names(X_m))]
 
 ###Corrélation
@@ -127,7 +128,7 @@ s.corcircle(acp_m_m$co, clabel = 0.5)
 ##FEMMES
 ```{r}
 imain_f <- which(!is.na(match(main, names(X_f))))
-names(X_f)[imain_f] <- c("FlargeurMain", "Fcironf́erenceMain", "FlongueurMain", "FlongueurPaumeMain")
+names(X_f)[imain_f] <- c("FlargeurMain", "FcirconferenceMain", "FlongueurMain", "FlongueurPaumeMain")
 names(X_f)[grep("Main", names(X_f))]
 
 ###Corrélation
@@ -143,28 +144,26 @@ s.corcircle(acp_m_f$co, clabel = 0.5)
 ```{r}
 ###Boxplot
 ####Longueurs de la main
-B_M1 <- ggplot(X_m, aes(x=factor("."), y=MlongueurMain)) + labs(title="Boite à moustaches de la longueur de la main",
+B_M_M1 <- ggplot(X_m, aes(x=factor("."), y=MlongueurMain)) + labs(title="Homme",
            x ="", y = "Longueur de la main - Homme") + geom_boxplot(width = 0.5) +
   coord_cartesian(ylim = c(250, 400))
 
-
-B_F1 <- ggplot(X_f, aes(x=factor("."), y=FlongueurMain)) + labs(title="Boite à moustaches de la longueur de la main",
+B_F_M1 <- ggplot(X_f, aes(x=factor("."), y=FlongueurMain)) + labs(title="Femme",
            x ="", y = "Longueur de la main - Femme") + geom_boxplot(width = 0.5)+
   coord_cartesian(ylim = c(250, 400))
 
-grid.arrange(B_M1,B_F1,ncol = 2)
+grid.arrange(B_M_M1,B_F_M1,ncol = 2,top = textGrob("Boites à moustaches de la longueur de la main"))
 
 ####Largeurs de la main
-B_M2 <- ggplot(X_m, aes(x=factor("."), y=MlargeurMain)) + labs(title="Boite à moustaches de la largeur de la main",
+B_M_M2 <- ggplot(X_m, aes(x=factor("."), y=MlargeurMain)) + labs(title="Homme",
            x ="", y = "Largeur de la main - Homme") + geom_boxplot(width = 0.5) +
   coord_cartesian(ylim = c(100, 400))
 
-
-B_F2 <- ggplot(X_f, aes(x=factor("."), y=FlargeurMain)) + labs(title="Boite à moustaches de la largeur de la main",
+B_F_M2 <- ggplot(X_f, aes(x=factor("."), y=FlargeurMain)) + labs(title="Femme",
            x ="", y = "Largeur de la main - Femme") + geom_boxplot(width = 0.5)+
   coord_cartesian(ylim = c(100, 400))
 
-grid.arrange(B_M2,B_F2,ncol = 2)
+grid.arrange(B_M_M2,B_F_M2,ncol = 2,top = textGrob("Boites à moustaches de la largeur de la main"))
 ```
 
 
@@ -178,9 +177,9 @@ pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
 ```{r}
 ipied_m <- which(!is.na(match(pied, names(X_m))))
 names(X_m)[ipied_m] <-
-   c("MciconférencePied", "MlongueurArrièrePied", "MlargeurBimalléolairePied",
-     "MlargeurPied", "MlongueurPied", "MlargeurTalonPied", "MhauteurMalléolairePied",
-     "McirconférenceChevillePied", "McirconférenceChevilleTalonPied")
+   c("McirconferencePied", "MlongueurArrierePied", "MlargeurBimalleolairePied",
+     "MlargeurPied", "MlongueurPied", "MlargeurTalonPied", "MhauteurMalleolairePied",
+     "McirconferenceChevillePied", "McirconferenceChevilleTalonPied")
 names(X_m)[grep("Pied", names(X_m))]
 
 ###Corrélation
@@ -196,9 +195,9 @@ s.corcircle(acp_p_m$co, clabel = 0.5)
 ```{r}
 ipied_f <- which(!is.na(match(pied, names(X_f))))
 names(X_f)[ipied_f] <-
-   c("FciconférencePied", "FlongueurArrièrePied", "FlargeurBimalléolairePied",
-     "FlargeurPied", "FlongueurPied", "FlargeurTalonPied", "FhauteurMalléolairePied",
-     "FcirconférenceChevillePied", "FcirconférenceChevilleTalonPied")
+   c("FcirconferencePied", "FlongueurArrierePied", "FlargeurBimalleolairePied",
+     "FlargeurPied", "FlongueurPied", "FlargeurTalonPied", "FhauteurMalleolairePied",
+     "FcirconferenceChevillePied", "FcirconferenceChevilleTalonPied")
 names(X_f)[grep("Pied", names(X_f))]
 
 ###Corrélation
@@ -210,7 +209,31 @@ tmpPF <- X_f[ , ipied_f]
 acp_p_f <- dudi.pca(tmpPF, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_p_f$co, clabel = 0.5)
 ```
+##HOMMES-FEMMES
+```{r}
+###Boxplot
+####Longueurs du pied
+B_M_P1 <- ggplot(X_m, aes(x=factor("."), y=MlongueurPied)) + labs(title="Homme",
+           x ="", y = "Longueur du pied - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(1000, 1600))
 
+B_F_P1 <- ggplot(X_f, aes(x=factor("."), y=FlongueurPied)) + labs(title="Femme",
+           x ="", y = "Longueur du pied - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(1000, 1600))
+
+grid.arrange(B_M_P1,B_F_P1,ncol = 2,top = textGrob("Boites à moustaches de la longueur du pied"))
+
+####Longueurs de l'arrière pied
+B_M_P2 <- ggplot(X_m, aes(x=factor("."), y=MlongueurArrierePied)) + labs(title="Homme",
+           x ="", y = "Longueur de l'arrière pied - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(1000, 1750))
+
+B_F_P2 <- ggplot(X_f, aes(x=factor("."), y=FlongueurArrierePied)) + labs(title="Femme",
+           x ="", y = "Longueur de l'arrière pied - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(1000, 1750))
+
+grid.arrange(B_M_P2,B_F_P2,ncol = 2,top = textGrob("Boites à moustaches de la longueur de l'arrière pied"))
+```
 
 #Tete
 ```{r}
@@ -223,11 +246,11 @@ tete <- c("bitragionchinarc", "bitragionsubmandibulararc", "bizygomaticbreadth",
 ```{r}
 itete_m <- which(!is.na(match(tete, names(X_m))))
 names(X_m)[itete_m] <-
-  c("MarcMentonTête", "MarcCouTête", "MlargeurJouesTête", "MlargeurTête",
-    "McirconférenceTête", "MlargeurYeuxTête", "MlargeurOreilleTête",
-    "MlongueurOreilleTête", "MdécollementOreilleTête", "MlongueurTête",
-    "MlongueurMentonTête", "McirconférenceCouTête", "McirconférenceCouBaseTête",
-    "MhauteurTête")
+  c("MarcMentonTete", "MarcCouTete", "MlargeurJouesTete", "MlargeurTete",
+    "McirconferenceTete", "MlargeurYeuxTete", "MlargeurOreilleTete",
+    "MlongueurOreilleTete", "MdecollementOreilleTete", "MlongueurTete",
+    "MlongueurMentonTete", "McirconferenceCouTete", "McirconferenceCouBaseTete",
+    "MhauteurTete")
 names(X_m)[grep("Tête", names(X_m))]
 
 ###Corrélation
@@ -243,11 +266,11 @@ s.corcircle(acp_t_m$co, clabel = 0.5)
 ```{r}
 itete_f <- which(!is.na(match(tete, names(X_f))))
 names(X_f)[itete_f] <-
-  c("FarcMentonTête", "FarcCouTête", "FlargeurJouesTête", "FlargeurTête",
-    "FcirconférenceTête", "FlargeurYeuxTête", "FlargeurOreilleTête",
-    "FlongueurOreilleTête", "FdécollementOreilleTête", "FlongueurTête",
-    "FlongueurMentonTête", "FcirconférenceCouTête", "FcirconférenceCouBaseTête",
-    "FhauteurTête")
+  c("FarcMentonTete", "FarcCouTete", "FlargeurJouesTete", "FlargeurTete",
+    "FcirconferenceTete", "FlargeurYeuxTete", "FlargeurOreilleTete",
+    "FlongueurOreilleTete", "FdecollementOreilleTete", "FlongueurTete",
+    "FlongueurMentonTete", "FcirconferenceCouTete", "FcirconferenceCouBaseTete",
+    "FhauteurTete")
 names(X_f)[grep("Tête", names(X_f))]
 
 ###Corrélation
@@ -258,6 +281,32 @@ corrplot(T_f, order="hclust", method = 'color')
 tmpTF <- X_f[ , itete_f]
 acp_t_f <- dudi.pca(tmpTF, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_t_f$co, clabel = 0.5)
+```
+##HOMMES-FEMMES
+```{r}
+###Boxplot
+####Arc Cou-Tête
+B_M_T1 <- ggplot(X_m, aes(x=factor("."), y=MarcCouTete)) + labs(title="Homme",
+           x ="", y = "Arc Cou-Tête - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(1000, 1750))
+
+B_F_T1 <- ggplot(X_f, aes(x=factor("."), y=FarcCouTete)) + labs(title="Femme",
+           x ="", y = "Arc Cou-Tête - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(1000, 1750))
+
+grid.arrange(B_M_T1,B_F_T1,ncol = 2,top = textGrob("Boites à moustaches de l'arc cou-tête"))
+
+####Arc Menton-Tête
+B_M_T2 <- ggplot(X_m, aes(x=factor("."), y=MarcMentonTete)) + labs(title="Homme",
+           x ="", y = "Arc Menton-Tête - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(100, 500))
+
+
+B_F_T2 <- ggplot(X_f, aes(x=factor("."), y=FarcMentonTete)) + labs(title="Femme",
+           x ="", y = "Arc Menton-Tête - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(100, 500))
+
+grid.arrange(B_M_T2,B_F_T2,ncol = 2,top = textGrob("Boites à moustaches de l'arc menton-tête"))
 ```
 
 
@@ -273,9 +322,9 @@ bras <- c("span", "sleevelengthspinewrist", "radialestylionlength", "sleeveoutse
 ibras_m <- which(!is.na(match(bras, names(X_m))))
 names(X_m)[ibras_m] <- 
   c("MempanBras", "MlongueurMancheBras", "MlongueurAvantBras", "MlongueurMancheSeuleBras",
-    "McirconférencePoignetBras", "MlongueurAvantBrasMain", "MlongueurAvantBrasPoing",
-    "MlongueurDosPoingBras", "McirconférenceBicepsBras", "McirconférenceAvantBras",
-    "MlongueurArrièreBras", "MlongueurÉpauleCoudeBras")
+    "McirconferencePoignetBras", "MlongueurAvantBrasMain", "MlongueurAvantBrasPoing",
+    "MlongueurDosPoingBras", "McirconferenceBicepsBras", "McirconferenceAvantBras",
+    "MlongueurArriereBras", "MlongueurEpauleCoudeBras")
 names(X_m)[grep("Bras", names(X_m))]
 
 ###Corrélation
@@ -292,9 +341,9 @@ s.corcircle(acp_b_m$co, clabel = 0.5)
 ibras_f <- which(!is.na(match(bras, names(X_f))))
 names(X_f)[ibras_f] <- 
   c("FempanBras", "FlongueurMancheBras", "FlongueurAvantBras", "FlongueurMancheSeuleBras",
-    "FcirconférencePoignetBras", "FlongueurAvantBrasMain", "FlongueurAvantBrasPoing",
-    "FlongueurDosPoingBras", "FcirconférenceBicepsBras", "FcirconférenceAvantBras",
-    "FlongueurArrièreBras", "FlongueurÉpauleCoudeBras")
+    "FcirconferencePoignetBras", "FlongueurAvantBrasMain", "FlongueurAvantBrasPoing",
+    "FlongueurDosPoingBras", "FcirconferenceBicepsBras", "FcirconferenceAvantBras",
+    "FlongueurArriereBras", "FlongueurEpauleCoudeBras")
 names(X_f)[grep("Bras", names(X_f))]
 
 ###Corrélation
@@ -306,6 +355,33 @@ tmpBF <- X_f[ , ibras_f]
 acp_b_f <- dudi.pca(tmpBF, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_b_f$co, clabel = 0.5)
 ```  
+##HOMMES-FEMMES
+```{r}
+###Boxplot
+####Circonférence Biceps-Bras
+B_M_B1 <- ggplot(X_m, aes(x=factor("."), y=McirconferenceBicepsBras)) + labs(title="Homme",
+           x ="", y = "Circonférence Biceps-Bras - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(200, 400))
+
+B_F_B1 <- ggplot(X_f, aes(x=factor("."), y=FcirconferenceBicepsBras)) + labs(title="Femme",
+           x ="", y = "Circonférence Biceps-Bras - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(200, 400))
+
+grid.arrange(B_M_B1,B_F_B1,ncol = 2,top = textGrob("Boites à moustaches de la circonférence Biceps-Bras"))
+
+####Longueur de l'avant-bras
+B_M_B2 <- ggplot(X_m, aes(x=factor("."), y=MlongueurAvantBras)) + labs(title="Homme",
+           x ="", y = "Longueur de l'avant-bras - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(250, 400))
+
+
+B_F_B2 <- ggplot(X_f, aes(x=factor("."), y=FlongueurAvantBras)) + labs(title="Femme",
+           x ="", y = "Longueur de l'avant-bras - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(250, 400))
+
+grid.arrange(B_M_B2,B_F_B2,ncol = 2,top = textGrob("Boites à moustaches de la longueur de l'avant-bras"))
+```
+
 
 
 ```{r}
