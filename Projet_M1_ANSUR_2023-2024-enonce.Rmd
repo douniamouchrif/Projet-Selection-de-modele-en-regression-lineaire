@@ -101,6 +101,8 @@ title('Répartition de la variable Y')
 ```{r}
 library(corrplot)
 library(ade4)
+library(ggplot2)
+library(gridExtra)
 ```
 
 #Main
@@ -110,7 +112,7 @@ main <- c("handbreadth", "handcircumference", "handlength", "palmlength")
 ##HOMMES
 ```{r}
 imain_m <- which(!is.na(match(main, names(X_m))))
-names(X_m)[imain_m] <- c("MlargeurMain", "McironférenceMain", "MlongueurMain", "MlongueurPaumeMain")
+names(X_m)[imain_m] <- c("MlargeurMain", "Mcironf́erenceMain", "MlongueurMain", "MlongueurPaumeMain")
 names(X_m)[grep("Main", names(X_m))]
 
 ###Corrélation
@@ -121,14 +123,11 @@ corrplot(M_m, order="hclust", method = 'color')
 tmpMM <- X_m[ , imain_m]
 acp_m_m <- dudi.pca(tmpMM, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_m_m$co, clabel = 0.5)
-
-###Boxplot
-
 ```
 ##FEMMES
 ```{r}
 imain_f <- which(!is.na(match(main, names(X_f))))
-names(X_f)[imain_f] <- c("FlargeurMain", "FcironférenceMain", "FlongueurMain", "FlongueurPaumeMain")
+names(X_f)[imain_f] <- c("FlargeurMain", "Fcironf́erenceMain", "FlongueurMain", "FlongueurPaumeMain")
 names(X_f)[grep("Main", names(X_f))]
 
 ###Corrélation
@@ -139,6 +138,33 @@ corrplot(M_f, order="hclust", method = 'color')
 tmpMF <- X_f[ , imain_f]
 acp_m_f <- dudi.pca(tmpMF, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_m_f$co, clabel = 0.5)
+```
+##HOMMES-FEMMES
+```{r}
+###Boxplot
+####Longueurs de la main
+B_M1 <- ggplot(X_m, aes(x=factor("."), y=MlongueurMain)) + labs(title="Boite à moustaches de la longueur de la main",
+           x ="", y = "Longueur de la main - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(250, 400))
+
+
+B_F1 <- ggplot(X_f, aes(x=factor("."), y=FlongueurMain)) + labs(title="Boite à moustaches de la longueur de la main",
+           x ="", y = "Longueur de la main - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(250, 400))
+
+grid.arrange(B_M1,B_F1,ncol = 2)
+
+####Largeurs de la main
+B_M2 <- ggplot(X_m, aes(x=factor("."), y=MlargeurMain)) + labs(title="Boite à moustaches de la largeur de la main",
+           x ="", y = "Largeur de la main - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(100, 400))
+
+
+B_F2 <- ggplot(X_f, aes(x=factor("."), y=FlargeurMain)) + labs(title="Boite à moustaches de la largeur de la main",
+           x ="", y = "Largeur de la main - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(100, 400))
+
+grid.arrange(B_M2,B_F2,ncol = 2)
 ```
 
 
