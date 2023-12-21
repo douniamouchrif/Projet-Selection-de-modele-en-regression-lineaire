@@ -403,12 +403,12 @@ s.corcircle(acptmp$co, clabel = 0.5)
 ```{r}
 ijambe_f <- which(!is.na(match(jambe, names(X_f))))
 colnames(X_f)[ijambe_f] <-
-   c("MlongueurJambe",
-   "MlongueurGenouFesseJambe", "MlongueurPoplitealFesseJambe", "MlongeurGenouJambe", "MlongueurPoplitealJambe",
-   "MépaisseurCuisseJambe",
-   "MlongueurTibiaJambe",
-   "MhauteurGenouDeboutJambe", "MhauteurGenouCotéJambe",
-   "McirconférenceMolletJambe", "McirconférenceGenouJambe", "McirconférenceCuisseJambe")  
+   c("FlongueurJambe",
+   "FlongueurGenouFesseJambe", "FlongueurPoplitealFesseJambe", "FlongeurGenouJambe", "FlongueurPoplitealJambe",
+   "FépaisseurCuisseJambe",
+   "FlongueurTibiaJambe",
+   "FhauteurGenouDeboutJambe", "FhauteurGenouCotéJambe",
+   "FcirconférenceMolletJambe", "FcirconférenceGenouJambe", "FcirconférenceCuisseJambe")  
 names(X_f)[grep("Jambe", names(X_f))]
 
 ###Corrélation
