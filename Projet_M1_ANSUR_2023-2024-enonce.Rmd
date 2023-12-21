@@ -383,21 +383,6 @@ grid.arrange(B_M_B2,B_F_B2,ncol = 2,top = textGrob("Boites à moustaches de la l
 ```
 
 
-
-```{r}
-####HOMMES
-subset_X_m <- X_m[, bras_names_m]
-data_matrix <- cbind(Y_m, subset_X_m)
-model_poids_bras_m <- lm(Y_m ~ ., data = data_matrix)
-summary(model_poids_bras_m)
-
-####FEMMES
-subset_X_f <- X_f[, bras_names_f]
-data_matrix <- cbind(Y_f, subset_X_f)
-model_poids_bras_f <- lm(Y_f ~ ., data = data_matrix)
-summary(model_poids_bras_f)
-```
-
 #Tronc
 ```{r}
 torse <- c("buttockcircumference", "chestcircumference", "shouldercircumference",
@@ -706,15 +691,106 @@ stepAIC(model_complet_f,direction="backward")
 
 
 # Deuxième façon : BIC
+##HOMMES
 ```{r}
-
+'# Comparaison des modèles
+if (BIC(modele1) < BIC(modele2)) {
+  print("Le modèle 1 est préférable.")
+} else {
+  print("Le modèle 2 est préférable.")
+}'
 ```
 
 
-# Troisième façon : lm() à la main + matrices de corrélation
+# Troisième façon : lm() à la main
+## On part de la totalité des 92 variables
 ```{r}
-library(car)
+'library(car)
 mod = lm...  
-vid(mod)
+vid(mod)'
+
+mod_m1 <- lm(Y_m ~ . , data=X_m)
+#summary(mod_m1)
+
+mod_m2 <- lm(Y_m ~ abdominalextensiondepthsitting + acromialheight + acromionradialelength + 
+              anklecircumference + axillaheight + balloffootcircumference +
+              bicepscircumferenceflexed + bicristalbreadth + bitragionchinarc +
+              buttockcircumference + buttockdepth + buttockheight + buttockkneelength +
+              calfcircumference + chestbreadth + chestcircumference + chestdepth +
+              crotchheight + crotchlengthomphalion + earlength + elbowrestheight + 
+              footbreadthhorizontal + footlength + forearmcircumferenceflexed +
+              forearmhandlength + headcircumference + headlength + heelanklecircumference +
+              heelbreadth + hipbreadth + hipbreadthsitting + iliocristaleheight +
+              interscyei + kneeheightmidpatella + kneeheightsitting +
+              lateralfemoralepicondyleheight + lowerthighcircumference + neckcircumference +
+              palmlength + poplitealheight + shouldercircumference + sittingheight + 
+              stature + tenthribheight + thighcircumference + thighclearance + tibialheight +
+              verticaltrunkcircumferenceusa + waistcircumference + waistdepth +
+              waistheightomphalion + wristcircumference + wristheight, data=X_m)
+#summary(mod_m2)
+
+mod_m3 <- lm(Y_m ~ abdominalextensiondepthsitting + acromialheight + acromionradialelength + 
+              anklecircumference + axillaheight + balloffootcircumference +
+              bicepscircumferenceflexed + bicristalbreadth + bitragionchinarc +
+              buttockcircumference + buttockdepth + buttockheight + buttockkneelength +
+              calfcircumference + chestbreadth + chestcircumference + chestdepth +
+              crotchheight + crotchlengthomphalion + earlength + elbowrestheight + 
+              footbreadthhorizontal + footlength + forearmcircumferenceflexed +
+              forearmhandlength + headcircumference + headlength + heelanklecircumference +
+              heelbreadth + hipbreadth + hipbreadthsitting + iliocristaleheight +
+              kneeheightsitting + lateralfemoralepicondyleheight + lowerthighcircumference +
+              neckcircumference + palmlength + poplitealheight + shouldercircumference +
+              sittingheight + stature + tenthribheight + thighcircumference + 
+              thighclearance + tibialheight + verticaltrunkcircumferenceusa +
+              waistcircumference + waistdepth + waistheightomphalion + wristcircumference +
+              wristheight, data=X_m)
+#summary(mod_m3)
+```
+
+Conclusion pour cette façon : pas pertinent de le faire à la main en partant de la totalité des variables car on part d'un très gros nombre (92) et cela devient très vite illisible et perte de temps lorsqu'il existe déjà des fonctions pouvant trouver de meilleurs modèles tout en étant pertinent.
+
+## On part d'un nombre de variables réduit, qui ont chacune une corrélation supérieure à 0,8 avec la variable Poids.
+```{r}
+correlations_m <- cor(Y_m, X_m)
+selected_columns_m <- which(correlations_m > 0.8)
+X_m_selected <- X_m[, selected_columns_m]
+
+correlations_f <- cor(Y_f, X_f)
+selected_columns_f <- which(correlations_f > 0.8)
+X_f_selected <- X_f[, selected_columns_f]
+# on supprimera les codes du dessus après
+```
+
+##HOMMES
+```{r}
+mod_m4 <- lm(Y_m ~ . , data = X_m_selected)
+#summary(mod_m4)
+
+mod_m5 <- lm(Y_m ~ buttockcircumference + buttockdepth + calfcircumference +
+               chestcircumference + chestdepth + forearmcircumferenceflexed +
+               forearmforearmbreadth + hipbreadth + hipbreadthsitting +
+               lowerthighcircumference + shouldercircumference + thighclearance +
+               verticaltrunkcircumferenceusa + waistcircumference + waistdepth, 
+             data = X_m_selected)
+#summary(mod_m5)
+
+mod_m6 <- lm(Y_m ~ buttockcircumference + buttockdepth + calfcircumference +
+               chestcircumference + chestdepth + forearmcircumferenceflexed +
+               hipbreadth + hipbreadthsitting + lowerthighcircumference +
+               shouldercircumference + thighclearance + verticaltrunkcircumferenceusa +
+               waistcircumference + waistdepth, data = X_m_selected)
+summary(mod_m6)
+```
+
+##FEMMES
+```{r}
+mod_f1 <- lm(Y_f ~ . , data = X_f_selected)
+#summary(mod_f1)
+
+mod_f2 <- lm(Y_f ~ bicepscircumferenceflexed + buttockcircumference + chestcircumference +
+               forearmcircumferenceflexed + hipbreadthsitting + lowerthighcircumference +
+               shouldercircumference + thighclearance + verticaltrunkcircumferenceusa +
+               waistcircumference, data = X_f_selected)
+summary(mod_f2)
 ```
 
