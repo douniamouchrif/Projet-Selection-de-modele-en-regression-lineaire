@@ -45,7 +45,21 @@ https://pbil.univ-lyon1.fr/R/pdf/pps100.pdf
 
 On veillera à privilégier des tableaux et des outils graphiques pour rendre compte des conclusions de votre étude.
 
-**Prise en main des données**
+
+Voici les librairies nécessaires pour l'execution du projet. 
+```{r message=FALSE, warning=FALSE}
+library(corrplot)
+library(ade4)
+library(ggplot2)
+library(gridExtra)
+library(grid)
+library(MASS)
+library(pROC)
+```
+
+# **Prise en main des données**
+
+Avant de commencer, nous avons fait le choix de séparer les hommes et les femmes pour notre étude.
  
 ```{r eval=TRUE, warning=FALSE, error = TRUE, message=FALSE}
 # Lecture des données ANSUR
@@ -54,13 +68,13 @@ ansurm = read.csv('ANSUR_II_MALE_Public.csv')
 ansurf = read.csv('ANSUR_II_FEMALE_Public.csv')
 
 p = 93 # Nombre de variables morphométriques
-names(ansurm)
-names(ansurf)
+#names(ansurm)
+#names(ansurf)
 
 donnees_m = ansurm[2:(p+1)]
 donnees_f = ansurf[2:(p+1)]
 nom_variables = names(ansurm)[2:(p+1)]
-print(nom_variables)
+#print(nom_variables)
 
 # Choix de la variable à expliquer
 indices = 1:p
@@ -71,7 +85,7 @@ Y_m = donnees_m[,pos]/10 # Conversion en kg
 X_m = donnees_m[,-pos] #92 variables sans la varibale pos
 dim(X_m)
 
-Y_f = donnees_f[,pos]/10 # Conversion en kg
+Y_f <- donnees_f[,pos]/10 # Conversion en kg
 X_f = donnees_f[,-pos]
 dim(X_f)
 
@@ -96,22 +110,24 @@ legend(100, 0.035, legend=c("Hommes", "Femmes"),fill=c(colM, colF))
 title('Répartition de la variable Y')
 ```
 
-**Analyse descriptive**
+Nous voyons que les hommes sont environ deux fois plus nombreux que les femmes dans cette étude. Il y a 4082 hommes contre 1986 femmes.
+De plus, nous observons à travers ce graphique que les hommes ont tendence à avoir un poid plus élevé que celui des femmes. Une grande majorité des hommes ont un poid compris entre environ 75 et 95 kg. Et la plus grande partie des femmes de cette étude ont un poid compris entre 55 et 75kg.
 
-```{r}
-library(corrplot)
-library(ade4)
-library(ggplot2)
-library(gridExtra)
-library(grid)
-library(MASS)
-```
+# **Analyse descriptive**
 
-#Main
+Dans cette partie, nous allons commencer par faire quelques analyses descriptives afin de comparer les hommes et les femmes mais également pour avoir une première approche avec les variables avant de faire les modèles en dernière partie.
+
+Dans le document qui présente les données, nous avons pu nous rendre compte que les variables étaient pouvaient être regroupées en différents groupes qui correspondent aux différentes partie du corps. Nous avons donc séparer comme dans le documents nos 92 variables en 7 groupes : Main, Pied, Tête, Bras, Tronc, Jambe et Stature. 
+
+# Main
+Le groupe Main, contient les 4 variables suivantes :
+
 ```{r}
 main <- c("handbreadth", "handcircumference", "handlength", "palmlength")
 ```
-##HOMMES
+
+### HOMMES
+
 ```{r}
 imain_m <- which(!is.na(match(main, names(X_m))))
 names(X_m)[imain_m] <- c("MlargeurMain", "McirconferenceMain", "MlongueurMain", "MlongueurPaumeMain")
@@ -126,7 +142,12 @@ tmpMM <- X_m[ , imain_m]
 acp_m_m <- dudi.pca(tmpMM, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_m_m$co, clabel = 0.5)
 ```
-##FEMMES
+
+À partir de la matrice de corrélation ainsi que du cercle de corrélation issu de l'ACP, nous voyons que dans le groupe Main des hommes la variable circonférenceMain et longueurMain sont très corrélées. Cela implique que les hommes qui ont une longueur de main élevé, auront aussi une circonférance de main grande. 
+En revanche, nous remarquons que les variables les moins bien projetés sont longueurMain et longueurPaumeMain.
+
+### FEMMES
+
 ```{r}
 imain_f <- which(!is.na(match(main, names(X_f))))
 names(X_f)[imain_f] <- c("FlargeurMain", "FcirconferenceMain", "FlongueurMain", "FlongueurPaumeMain")
@@ -141,7 +162,11 @@ tmpMF <- X_f[ , imain_f]
 acp_m_f <- dudi.pca(tmpMF, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_m_f$co, clabel = 0.5)
 ```
-##HOMMES-FEMMES
+
+Pour les femmes nous observons une matrice de corrélation ainsi qu'un cercle de corrélation presque identique à ceux des hommes. Cela nous montre que le genre n'influe donc pas sur les variables associées à la main.
+
+### HOMMES-FEMMES
+
 ```{r}
 ###Boxplot
 ####Longueurs de la main
@@ -167,14 +192,15 @@ B_F_M2 <- ggplot(X_f, aes(x=factor("."), y=FlargeurMain)) + labs(title="Femme",
 grid.arrange(B_M_M2,B_F_M2,ncol = 2,top = textGrob("Boites à moustaches de la largeur de la main"))
 ```
 
-
-#Pied
+# Pied
 ```{r}
 pied <- c("balloffootcircumference", "balloffootlength", "bimalleolarbreadth",
           "footbreadthhorizontal", "footlength", "heelbreadth", "lateralmalleolusheight",
           "anklecircumference", "heelanklecircumference")
 ```
-##HOMMES
+
+### HOMMES
+
 ```{r}
 ipied_m <- which(!is.na(match(pied, names(X_m))))
 names(X_m)[ipied_m] <-
@@ -192,7 +218,9 @@ tmpPM <- X_m[ , ipied_m]
 acp_p_m <- dudi.pca(tmpPM, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_p_m$co, clabel = 0.5)
 ```
-##FEMMES
+
+### FEMMES
+
 ```{r}
 ipied_f <- which(!is.na(match(pied, names(X_f))))
 names(X_f)[ipied_f] <-
@@ -210,7 +238,9 @@ tmpPF <- X_f[ , ipied_f]
 acp_p_f <- dudi.pca(tmpPF, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_p_f$co, clabel = 0.5)
 ```
-##HOMMES-FEMMES
+
+### HOMMES-FEMMES
+
 ```{r}
 ###Boxplot
 ####Longueurs du pied
@@ -236,14 +266,17 @@ B_F_P2 <- ggplot(X_f, aes(x=factor("."), y=FlongueurArrierePied)) + labs(title="
 grid.arrange(B_M_P2,B_F_P2,ncol = 2,top = textGrob("Boites à moustaches de la longueur de l'arrière pied"))
 ```
 
-#Tete
+# Tete
+
 ```{r}
 tete <- c("bitragionchinarc", "bitragionsubmandibulararc", "bizygomaticbreadth",
           "headbreadth", "headcircumference", "interpupillarybreadth", "earbreadth",
           "earlength", "earprotrusion", "headlength", "mentonsellionlength",
           "neckcircumference", "neckcircumferencebase", "tragiontopofhead")
 ```
-##HOMMES
+
+### HOMMES
+
 ```{r}
 itete_m <- which(!is.na(match(tete, names(X_m))))
 names(X_m)[itete_m] <-
@@ -263,7 +296,9 @@ tmpTM <- X_m[ , itete_m]
 acp_t_m <- dudi.pca(tmpTM, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_t_m$co, clabel = 0.5)
 ```
-##FEMMES
+
+### FEMMES
+
 ```{r}
 itete_f <- which(!is.na(match(tete, names(X_f))))
 names(X_f)[itete_f] <-
@@ -283,7 +318,9 @@ tmpTF <- X_f[ , itete_f]
 acp_t_f <- dudi.pca(tmpTF, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_t_f$co, clabel = 0.5)
 ```
-##HOMMES-FEMMES
+
+### HOMMES-FEMMES
+
 ```{r}
 ###Boxplot
 ####Arc Cou-Tête
@@ -311,14 +348,17 @@ grid.arrange(B_M_T2,B_F_T2,ncol = 2,top = textGrob("Boites à moustaches de l'ar
 ```
 
 
-#Bras
+# Bras
+
 ```{r}
 bras <- c("span", "sleevelengthspinewrist", "radialestylionlength", "sleeveoutseam",
           "wristcircumference", "forearmhandlength", "forearmcenterofgriplength",
           "thumbtipreach", "bicepscircumferenceflexed", "forearmcircumferenceflexed",
           "acromionradialelength", "shoulderelbowlength")
 ```
-##HOMMES
+
+### HOMMES
+
 ```{r}
 ibras_m <- which(!is.na(match(bras, names(X_m))))
 names(X_m)[ibras_m] <- 
@@ -337,7 +377,9 @@ tmpBM <- X_m[ , ibras_m]
 acp_b_m <- dudi.pca(tmpBM, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_b_m$co, clabel = 0.5)
 ```
-##FEMMES
+
+### FEMMES
+
 ```{r}
 ibras_f <- which(!is.na(match(bras, names(X_f))))
 names(X_f)[ibras_f] <- 
@@ -356,7 +398,9 @@ tmpBF <- X_f[ , ibras_f]
 acp_b_f <- dudi.pca(tmpBF, scannf = FALSE, scale = FALSE)
 s.corcircle(acp_b_f$co, clabel = 0.5)
 ```  
-##HOMMES-FEMMES
+
+### HOMMES-FEMMES
+
 ```{r}
 ###Boxplot
 ####Circonférence Biceps-Bras
@@ -383,8 +427,8 @@ B_F_B2 <- ggplot(X_f, aes(x=factor("."), y=FlongueurAvantBras)) + labs(title="Fe
 grid.arrange(B_M_B2,B_F_B2,ncol = 2,top = textGrob("Boites à moustaches de la longueur de l'avant-bras"))
 ```
 
+# Tronc
 
-#Tronc
 ```{r}
 torse <- c("buttockcircumference", "chestcircumference", "shouldercircumference",
            "waistcircumference", "verticaltrunkcircumferenceusa", "waistdepth", "chestdepth",
@@ -395,7 +439,8 @@ torse <- c("buttockcircumference", "chestcircumference", "shouldercircumference"
            "waistbreadth", "buttockdepth", "crotchlengthposterioromphalion")
 ```
 
-##Hommes
+### Hommes
+
 ```{r}
 itorse_m <- which(!is.na(match(torse, names(X_m))))
 names(X_m)[itorse_m] <-
@@ -419,7 +464,8 @@ acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
 s.corcircle(acptmp$co, clabel = 0.5)
 ```
 
-##Femmes
+### Femmes
+
 ```{r}
 itorse_f <- which(!is.na(match(torse, names(X_f))))
 names(X_f)[itorse_f] <-
@@ -444,36 +490,38 @@ s.corcircle(acptmp$co, clabel = 0.5)
 
 ```
 
-##HOMMES-FEMMES
+### HOMMES-FEMMES
+
 ```{r}
 ###Boxplot
-####Longueur Torse
-bp1_torse_m <- ggplot(X_m, aes(x=factor("."), y=MlongueurTorse)) + labs(title="Boite à moustaches de la longueur du torse",
-           x ="", y = "Longueur du torse - Homme") + geom_boxplot(width = 0.5) +
-  coord_cartesian(ylim = c(115, 175))
+####circonferencePoitrineTorse
+bp1_torse_m <- ggplot(X_m, aes(x=factor("."), y=McirconferencePoitrineTorse)) + labs(title="Boite à moustaches de la Circonference Poitrine Torse",
+           x ="", y = "Circonference Poitrine Torse - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(1150, 1750))
 
 
-bp1_torse_f <- ggplot(X_f, aes(x=factor("."), y=FlongueurTorse)) + labs(title="Boite à moustaches de la longueurdu torse",
-           x ="", y = "Longueur du torse - Femme") + geom_boxplot(width = 0.5)+
-  coord_cartesian(ylim = c(115, 175))
+bp1_torse_f <- ggplot(X_f, aes(x=factor("."), y=FcirconferencePoitrineTorse)) + labs(title="Boite à moustaches de la Circonference Poitrine Torse",
+           x ="", y = "Circonference Poitrine Torse - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(1150, 1750))
 
 grid.arrange(bp1_torse_m,bp1_torse_f,ncol = 2, top = textGrob("Boites à moustaches de la longueur du torse"))
 
-####circonferenceEpauleTorse
-bp2_torse_m <- ggplot(X_m, aes(x=factor("."), y=McirconferenceEpauleTorse)) + labs(title="Boite à moustaches de la Circonference Epaule Torse",
-           x ="", y = "Circonference Epaule Torse - Homme") + geom_boxplot(width = 0.5) +
-  coord_cartesian(ylim = c(250,400))
+####circonferenceVerticaleTorse
+bp2_torse_m <- ggplot(X_m, aes(x=factor("."), y=McirconferenceVerticaleTorse)) + labs(title="Boite à moustaches de la Circonference Verticale Torse",
+           x ="", y = "Circonference Verticale Torse - Homme") + geom_boxplot(width = 0.5) +
+  coord_cartesian(ylim = c(1000,1600))
 
 
-bp2_torse_f <- ggplot(X_f, aes(x=factor("."), y=FcirconferenceEpauleTorse)) + labs(title="Boite à moustaches de la Circonference Epaule Torse",
-           x ="", y = "Circonference Epaule Torse - Femme") + geom_boxplot(width = 0.5)+
-  coord_cartesian(ylim = c(250, 400))
+bp2_torse_f <- ggplot(X_f, aes(x=factor("."), y=FcirconferenceVerticaleTorse)) + labs(title="Boite à moustaches de la Circonference Verticale Torse",
+           x ="", y = "Circonference Verticale Torse - Femme") + geom_boxplot(width = 0.5)+
+  coord_cartesian(ylim = c(1000, 1600))
 
-grid.arrange(bp2_torse_m,bp2_torse_f,ncol = 2, top = textGrob("Boites à moustaches de la Circonference Epaule Torse"))
+grid.arrange(bp2_torse_m,bp2_torse_f,ncol = 2, top = textGrob("Boites à moustaches de la Circonference Verticale Torse"))
 
 ```
 
-#Jambe
+# Jambe
+
 ```{r}
 jambe <- c("functionalleglength",
    "buttockkneelength", "buttockpopliteallength", "kneeheightsitting", "poplitealheight",
@@ -483,7 +531,8 @@ jambe <- c("functionalleglength",
    "calfcircumference", "lowerthighcircumference", "thighcircumference")
 ```
 
-##Hommes
+### Hommes
+
 ```{r}
 ijambe_m <- which(!is.na(match(jambe, names(X_m))))
 colnames(X_m)[ijambe_m] <-
@@ -509,7 +558,8 @@ s.corcircle(acptmp$co, clabel = 0.5)
 
 ```
 
-##Femmes
+### Femmes
+
 ```{r}
 ijambe_f <- which(!is.na(match(jambe, names(X_f))))
 colnames(X_f)[ijambe_f] <-
@@ -531,36 +581,38 @@ acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
 s.corcircle(acptmp$co, clabel = 0.5)
 ```
 
-##HOMMES-FEMMES
+### HOMMES-FEMMES
+
 ```{r}
 library(grid)
 ###Boxplot
 ####Longueur Torse
 bp1_jambe_m <- ggplot(X_m, aes(x=factor("."), y=MlongueurTibiaJambe)) + labs(title="Boite à moustaches de la longueur du Tibia Jambe",
            x ="", y = "Longueur Tibia Jambe - Homme") + geom_boxplot(width = 0.5) +
-  coord_cartesian(ylim = c(200, 500))
+  coord_cartesian(ylim = c(250, 500))
 
 
 bp1_jambe_f <- ggplot(X_f, aes(x=factor("."), y=FlongueurTibiaJambe)) + labs(title="Boite à moustaches de la Longueur Tibia Jambe",
            x ="", y = "Longueur Tibia Jambe - Femme") + geom_boxplot(width = 0.5)+
-  coord_cartesian(ylim = c(200, 500))
+  coord_cartesian(ylim = c(250, 500))
 
 grid.arrange(bp1_jambe_m,bp1_jambe_f,ncol = 2, top = textGrob("Boites à moustaches de la longueur du Tibia Jambe"))
 
 ####Largeurs Dos-Torse
 bp2_jambe_m <- ggplot(X_m, aes(x=factor("."), y=MhauteurGenouDeboutJambe)) + labs(title="Boite à moustaches de la Hauteur Genou Debout Jambe",
            x ="", y = "Hauteur Genou Debout Jambe - Homme") + geom_boxplot(width = 0.5) +
-  coord_cartesian(ylim = c(275,500))
+  coord_cartesian(ylim = c(200,500))
 
 
 bp2_jambe_f <- ggplot(X_f, aes(x=factor("."), y=FhauteurGenouDeboutJambe)) + labs(title="Boite à moustaches de la Hauteur Genou Debout Jambe",
            x ="", y = "Hauteur Genou Debout Jambe - Femme") + geom_boxplot(width = 0.5)+
-  coord_cartesian(ylim = c(275, 500))
+  coord_cartesian(ylim = c(200, 500))
 
 grid.arrange(bp2_jambe_m,bp2_jambe_f,ncol = 2, top = textGrob("Boites à moustaches de la Hauteur Genou Debout Jambe"))
 ```
 
-#Stature
+# Stature
+
 ```{r}
 stature <- c("overheadfingertipreachsitting",
    "elbowrestheight", "eyeheightsitting", "sittingheight",
@@ -570,7 +622,8 @@ stature <- c("overheadfingertipreachsitting",
    "stature", "cervicaleheight", "acromialheight", "wristheight")
 ```
 
-##Hommes
+### Hommes
+
 ```{r}
 istature_m <- which(!is.na(match(stature, names(X_m))))
 colnames(X_m)[istature_m] <-
@@ -593,7 +646,8 @@ s.corcircle(acptmp$co, clabel = 0.5)
 
 ```
 
-##Femmes
+### Femmes
+
 ```{r}
 istature_f <- which(!is.na(match(stature, names(X_f))))
 colnames(X_f)[istature_f] <-
@@ -615,7 +669,8 @@ acptmp <- dudi.pca(tmp, scannf = FALSE, scale = FALSE)
 s.corcircle(acptmp$co, clabel = 0.5)
 ```
 
-##HOMMES-FEMMES
+### HOMMES-FEMMES
+
 ```{r}
 library(grid)
 ###Boxplot
@@ -644,172 +699,244 @@ bp2_stature_f <- ggplot(X_f, aes(x=factor("."), y=FhauteurNombrilStature)) + lab
 grid.arrange(bp2_stature_m,bp2_stature_f,ncol = 2, top = textGrob("Boites à moustaches de la hauteur Nombril Stature"))
 ```
 
-#autres variables
-```{r}
+## Conclusion
 
+D'une manière générale, nous constatons qu'en moyenne nous avons tendence à avoir des valeurs pour les différentes variables plus élevées chez les hommes que chez les femmes.  
+
+
+# **Sélection de modèle**
+
+```{r include=FALSE}
+X_m = donnees_m[,-pos] 
+X_f = donnees_f[,-pos]
 ```
 
+Dans le but de trouver le meilleur modèle pour chaque genre pour expliquer la variable poid, nous avons utilisé plusieurs méthodes. Le critère AIC, la régression linéaire multiple et enfin le critère BIC pour comparer les deux modéles trouvés par les méthodes précedentes. 
 
-**Sélection de modèle**
+## Séléction d'un petit nombre de variables par la corrélation
 
-Dans le but de trouver un modèle pour expliquer la variable poid, nous avons utilisé plusieurs méthodes.
+Avant tout, ayant un trop grand nombre de variables dans nos jeux de données actuels (92), nous avons fait le choix de réduire le nombre de variables. Pour cela nous avons conservé les variables ayant une corrélation supérieur à 0.8 avec le poid et ceci pour chaque genre.
 
+Nous obtenons ainsi un groupe de 20 variables pour les hommes.
 
-# Séléction d'un petit nombre de variables par la corrélation
 ```{r}
 correlations_m <- cor(Y_m, X_m)
 selected_columns_m <- which(correlations_m > 0.8)
 X_m_selected <- X_m[, selected_columns_m]
-print(X_m_selected)
+names(X_m_selected)
+```
 
+Et pour les femmes 15 variables : 
+
+```{r}
 correlations_f <- cor(Y_f, X_f)
 selected_columns_f <- which(correlations_f > 0.8)
 X_f_selected <- X_f[, selected_columns_f]
-print(X_f_selected)
-
-#on retient 20 variables pour les hommes et 15 pour les femmes
+names(X_f_selected)
 ```
 
+Notons que nous avons beaucoup de variables de la catégorie Tronc dans les variables les plus corrélées avec le poid chez les hommes et les femmes.
 
-# Premère façon : AIC (méthode desendante)
+C'est à partir de ces deux nouveaux ensemble de variables que nous allons chercher les meilleurs modèles. 
 
-###HOMMES
+## Échantillonnage des données
+
+Nous avons ensuite décidé avant de passer aux séléctions de modèles de séparer nos données pour chaque genre en deux échantillons pour entrainer les modèles et pour les tester à la fin. Nous avons gardé 70% des données pour l'entrainement des modèles et 30% pour les tests. 
+
 ```{r}
-# Modèle complet avec 20 variables
-model_complet_m <- lm(Y_m ~ .,data=X_m_selected)
+indexes <- sample(1:nrow(X_m_selected), size=0.3*nrow(X_m_selected))
+X_m_test <- X_m_selected[indexes,]
+X_m_train <- X_m_selected[-indexes, ]
+Y_m_test <- Y_m[indexes]
+Y_m_train <- Y_m[-indexes]
+
+indexes <- sample(1:nrow(X_f_selected), size=0.3*nrow(X_f_selected))
+X_f_test <- X_f_selected[indexes,]
+X_f_train <- X_f_selected[-indexes, ]
+Y_f_test <- Y_f[indexes]
+Y_f_train <- Y_f[-indexes]
+```
+
+## Premère méthode : AIC (méthode desendante)
+
+L'AIC (Akaike Information Criterion) est utilisé comme critère de sélection de modèle, visant à minimiser son score. L'objectif est d'identifier les modèles (les ensembles de variables) qui offrent une valeur minimale pour l'AIC. 
+On utilise ici la méthode desendante, c'est à dire que nous partons du modèle complet vers un modèle avec moins de variables. 
+
+### HOMMES
+
+Pour les hommes le modèle complet contient 20 variables. Nous observons un R^2 environ égale à 97% de variabilité expliquée.
+
+```{r}
+model_complet_m <- lm(Y_m_train ~ .,data=X_m_train)
+summary(model_complet_m)
+```
+
+```{r}
 model_backward_m <- stepAIC(model_complet_m,direction="backward")
-#on obtient un modèle à 15 variables 
-
 ```
 
-###FEMMES
+Après avoir appliqué la fonction $stepAIC()$ avec la direction "backward", nous obtenons un modèle ne contenant plus que 16 variables. Nous observons ici aussi un R^2 environ égale à 97% de variabilité expliquée.
+
 ```{r}
-# Modèle complet avec 15 variables
-model_complet_f <- lm(Y_f ~ .,data=X_f_selected)
+summary(model_backward_m)
+```
+
+### FEMMES
+
+Pour les femmes le modèle complet contient 15 variables. Nous observons un R^2 environ égale à 96% de variabilité expliquée.
+
+```{r}
+model_complet_f <- lm(Y_f_train ~ .,data=X_f_train)
+summary(model_complet_f)
+```
+
+```{r}
 model_backward_f <- stepAIC(model_complet_f,direction="backward")
-#on obtient un modèle à 11 variables
 ```
 
+Après avoir appliqué la fonction $stepAIC()$ avec la direction "backward", nous obtenons un modèle ne contenant plus que 12 variables. Nous observons également un R^2 environ égale à 96% de variabilité expliquée.
 
-# Deuxième façon : lm() à la main
-
-## On part de la totalité des 92 variables
 ```{r}
-'library(car)
-mod = lm...  
-vid(mod)'
-
-mod_m1 <- lm(Y_m ~ . , data=X_m)
-#summary(mod_m1)
-
-mod_m2 <- lm(Y_m ~ abdominalextensiondepthsitting + acromialheight + acromionradialelength + 
-              anklecircumference + axillaheight + balloffootcircumference +
-              bicepscircumferenceflexed + bicristalbreadth + bitragionchinarc +
-              buttockcircumference + buttockdepth + buttockheight + buttockkneelength +
-              calfcircumference + chestbreadth + chestcircumference + chestdepth +
-              crotchheight + crotchlengthomphalion + earlength + elbowrestheight + 
-              footbreadthhorizontal + footlength + forearmcircumferenceflexed +
-              forearmhandlength + headcircumference + headlength + heelanklecircumference +
-              heelbreadth + hipbreadth + hipbreadthsitting + iliocristaleheight +
-              interscyei + kneeheightmidpatella + kneeheightsitting +
-              lateralfemoralepicondyleheight + lowerthighcircumference + neckcircumference +
-              palmlength + poplitealheight + shouldercircumference + sittingheight + 
-              stature + tenthribheight + thighcircumference + thighclearance + tibialheight +
-              verticaltrunkcircumferenceusa + waistcircumference + waistdepth +
-              waistheightomphalion + wristcircumference + wristheight, data=X_m)
-#summary(mod_m2)
-
-mod_m3 <- lm(Y_m ~ abdominalextensiondepthsitting + acromialheight + acromionradialelength + 
-              anklecircumference + axillaheight + balloffootcircumference +
-              bicepscircumferenceflexed + bicristalbreadth + bitragionchinarc +
-              buttockcircumference + buttockdepth + buttockheight + buttockkneelength +
-              calfcircumference + chestbreadth + chestcircumference + chestdepth +
-              crotchheight + crotchlengthomphalion + earlength + elbowrestheight + 
-              footbreadthhorizontal + footlength + forearmcircumferenceflexed +
-              forearmhandlength + headcircumference + headlength + heelanklecircumference +
-              heelbreadth + hipbreadth + hipbreadthsitting + iliocristaleheight +
-              kneeheightsitting + lateralfemoralepicondyleheight + lowerthighcircumference +
-              neckcircumference + palmlength + poplitealheight + shouldercircumference +
-              sittingheight + stature + tenthribheight + thighcircumference + 
-              thighclearance + tibialheight + verticaltrunkcircumferenceusa +
-              waistcircumference + waistdepth + waistheightomphalion + wristcircumference +
-              wristheight, data=X_m)
-#summary(mod_m3)
+summary(model_backward_f)
 ```
 
-Conclusion pour cette façon : pas pertinent de le faire à la main en partant de la totalité des variables car on part d'un très gros nombre (92) et cela devient très vite illisible et perte de temps lorsqu'il existe déjà des fonctions pouvant trouver de meilleurs modèles tout en étant pertinent.
+## Deuxième façon : Régression linéaire multiple
 
-## On part d'un nombre de variables réduit, qui ont chacune une corrélation supérieure à 0,8 avec la variable Poids.
+La régression linéaire multiple modélise les relations entre une variable dépendante et plusieurs variables. Les p-values associées aux autres variables évaluent la significativité statistique de leurs effets. L'évaluation des p_value aide à décider quelles variables inclure dans les modèles.
 
-###HOMMES
+À chaque itération, nous excluons les variables non significatives, c'est à dire celles ayant une p_value supérieur à 0.05.
+
+### HOMMES
+
+Le modèle complet pour les hommes contient 20 variables avec 97% de variabilité expliqué par la modèle.
+
 ```{r}
-mod_m4 <- lm(Y_m ~ . , data = X_m_selected)
-#summary(mod_m4)
+mod_m_complet <- lm(Y_m_train ~ . , data = X_m_train)
+#summary(mod_m_complet)
 
-mod_m5 <- lm(Y_m ~ buttockcircumference + buttockdepth + calfcircumference +
-               chestcircumference + chestdepth + forearmcircumferenceflexed +
-               forearmforearmbreadth + hipbreadth + hipbreadthsitting +
+mod_m_1 <- lm(Y_m_train ~ buttockcircumference + buttockdepth + calfcircumference +
+               chestcircumference + chestdepth + forearmcircumferenceflexed + hipbreadth + hipbreadthsitting +
                lowerthighcircumference + shouldercircumference + thighclearance +
                verticaltrunkcircumferenceusa + waistcircumference + waistdepth, 
-             data = X_m_selected)
-#summary(mod_m5)
-
-mod_m6 <- lm(Y_m ~ buttockcircumference + buttockdepth + calfcircumference +
-               chestcircumference + chestdepth + forearmcircumferenceflexed +
-               hipbreadth + hipbreadthsitting + lowerthighcircumference +
-               shouldercircumference + thighclearance + verticaltrunkcircumferenceusa +
-               waistcircumference + waistdepth, data = X_m_selected)
-summary(mod_m6)
+             data = X_m_train)
+summary(mod_m_1)
 ```
 
-###FEMMES
-```{r}
-mod_f1 <- lm(Y_f ~ . , data = X_f_selected)
-#summary(mod_f1)
+Après avoir fait la régression, et enlevé toutes les variables non significtaives, nous obtenons un modèle avec 14 variables et toujours avec le même pourcentage de variabilité expliqué. 
 
-mod_f2 <- lm(Y_f ~ bicepscircumferenceflexed + buttockcircumference + chestcircumference +
+
+### FEMMES
+
+Pour les femmes le modèle complet contient toujours 15 variables et 96% de variabilité expliqué.
+
+```{r}
+mod_f_complet <- lm(Y_f_train ~ . , data = X_f_train)
+#summary(mod_f_complet)
+
+mod_f_1 <- lm(Y_f_train ~ bicepscircumferenceflexed + buttockcircumference + chestcircumference +
                forearmcircumferenceflexed + hipbreadthsitting + lowerthighcircumference +
                shouldercircumference + thighclearance + verticaltrunkcircumferenceusa +
-               waistcircumference, data = X_f_selected)
-summary(mod_f2)
+               waistcircumference, data = X_f_train)
+summary(mod_f_1)
 ```
+
+Après avoir fait la régression, nous avons maintenant que des variables significatives pour notre modèle et nous obtenons un modèle ayant 10 variables et ayant un R^2 très légérement inférieur au modèle complet (0.1%).
 
 
 # Troisième façon : BIC
 
-Nous allons maintenant chercher quel modèle est le meilleur parmis celui trouvé par le critère de l'AIC et celui trouvé par la méthode de régression lm() pour chaque genre pour expliquer le poid. 
+Nous allons maintenant chercher quel modèle est le meilleur parmis celui trouvé par le critère de l'AIC et celui trouvé par la méthode de régression linéaire pour chaque genre pour expliquer le poid. Pour cela nous allons utiliser le critère BIC. 
+
+Le BIC (Bayesian Information Criterion), tout comme l'AIC, est un critère de sélection de modèle. L'objectif est de minimiser son score pour identifier les modèles qui offrent une valeur de BIC minimale.
+
+Nous avons donc comparé les BIC de chaque modéle trouvé pour les hommes et les femmes, et nous avons retenu celui dont le BIC est minimale. 
+
+##### Comparaison des modèles hommes
 
 ```{r}
-# Comparaison des modèles hommes
-if (BIC(model_backward_m) < BIC(mod_m6)) {
+if (BIC(model_backward_m) < BIC(mod_m_1)) {
   print("Le modèle trouvé par le critère AIC est préférable pour les hommes.")
 } else {
-  print("Le modèle trouvé par la methode de régression lm() est préférable pour les hommes")
+  print("Le modèle trouvé par la methode de régression est préférable pour les hommes")
 }
-
-# Comparaison des modèles femmes
-if (BIC(model_backward_f) < BIC(mod_f2)) {
-  print("Le modèle trouvé par le critère AIC est préférable pour les femmes")
-} else {
-  print("Le modèle trouvé par la methode de régression lm() est préférable pour les femmes")
-}
-
 ```
 
-#Courbe ROC
+##### Comparaison des modèles femmes
 
 ```{r}
-#peut être faire les courbes roc pour chaque modèle ?? comme le prof demande des grphiques et tableau ?
-#peut etre separer nos données en 2 echantillon test et train ?? psk la on a forcement une aire de 1 sous la courbe
-#jsp si c'est pertiant mais comme il veux des graphique je vois pas quoi faire d'autre 
-
-prediction <- predict(model_backward_m, X_m)
-library(pROC)
-roc_curve <- roc(Y_m, prediction)
-auc(roc_curve)
-plot(roc_curve)
+if (BIC(model_backward_f) < BIC(mod_f_1)) {
+  print("Le modèle trouvé par le critère AIC est préférable pour les femmes")
+} else {
+  print("Le modèle trouvé par la methode de régression est préférable pour les femmes")
+}
 ```
 
+Pour les hommes ainsi que pour les femmes les modèles trouvés avec la méthode de la régression linéaire sont les meilleurs.
 
+# Graphiques
 
+Pour terminer, nous voulions représenter graphiquement la performance de nos 2 modèles retenus. 
+Pour cela nous avons d'abord fait les graphiques de disperssion des vraies valeurs par rapport aux prédictions pour nous rendre compte de la précision de nos modèles.
+Ensuite, nous avons réalisé les graphiques des résidus pour ces modèles, pour pouvoir visualiser l'écart entre les valeurs réelles et les valeurs prédites. L'objectif étant que les résidus soit minimaux.
 
+## Graphiques de dispersion 
+
+```{r echo=FALSE}
+prediction3 <- predict(mod_m_1, X_m_test)
+plot(Y_m_test, prediction3, main = "Graphique de dispersion pour mod_m_1", xlab = "Vraies valeurs", ylab = "Prédictions")
+abline(0, 1, col = "red") 
+```
+
+```{r echo=FALSE}
+prediction4 <- predict(mod_f_1, X_f_test)
+plot(Y_f_test, prediction4, main = "Graphique de dispersion pour mod_f_1", xlab = "Vraies valeurs", ylab = "Prédictions")
+abline(0, 1, col = "red")  
+```
+
+À  partir de ces graphiques, nous pouvons dire que nous avons globalement de bons modèles assez précis, nous voyons sur nos graphiques que majoritairement les points sont proches de la courbe rouge ce qui signifie que les poids prédits sont proches des poids réels.
+Remarquons quand même que nos modèles ont du mal à prédire les poids élevés, en haut les points sont plus éloignés de la courbe rouge, nos modèles ont tendences à sous estimer pour ces points.
+
+## Graphiques des résidus 
+
+Pour aller plus loin nous avons aussi voulu représenter les graphiques des résidus.
+
+```{r echo=FALSE}
+residuals3 <- Y_m_test - prediction3
+plot(prediction3, residuals3, main = "Graphique des résidus pour mod_m_1", xlab = "Prédictions", ylab = "Résidus")
+abline(h = 0, col = "red")
+```
+
+```{r echo=FALSE}
+residuals4 <- Y_f_test - prediction4
+plot(prediction4, residuals4, main = "Graphique des résidus pour mod_f_1", xlab = "Prédictions", ylab = "Résidus")
+abline(h = 0, col = "red")
+```
+
+L'idéal aurait était d'avoir tous les points très proches de la ligne rouge qui represente un résidu égale à 0. Or, nous voyons que ce n'est pas tout à fait le cas, les points sont assez dispersés. Pour les modèles des femmes les résidus sont compris entre -5 et 5 alors que pour les hommes l'intervalle est deux fois plus grands entre -10 et 10. 
+Nous avons représenté les résidus sous la forme d'un histogramme afin de mieux voir leurs distributions.
+
+```{r echo=FALSE}
+hist(residuals3, main = "Histogramme des résidus pour mod_m_1", xlab = "Résidus", col = "lightblue", border = "black")
+```
+
+```{r echo=FALSE}
+hist(residuals4, main = "Histogramme des résidus pour mod_f_1", xlab = "Résidus", col = "lightblue", border = "black")
+```
+
+Nous voyons ici que les résidus ont une distribution semblable à une distribution gaussienne. Ils sont centrés en 0 ce qui signifie que la plupart des résidus sont proches de 0.
+
+# Conclusion 
+
+En conclusion, les modèles que nous avons trouvé ne sont globalement plutôt bons d'un point de vu précision, comme l'ont montré les graphiques de dispersion. Nous avons ensuite constaté que nos résidus avaient une distribution semblable à une distribution gaussienne ce qui est bien pour les modèles linéaire. 
+
+Le fait qu'au départ nous avons drastiquement réduit le nombre de variables en ne gardant que les plus corrélées avec le poids peut expliquer qu'on ait pas les modèles les plus optimaux. Une autre méthode de pré-réduction de variables aurait peut-être donnée de meilleurs résultats.
+
+Pour finir, ce travil de séléction de modèle nous permet de conclure que par rapport à nos modèles, la variable poid est expliqué par les variables suivantes qui ont un impact significatif sur celle-ci :
+
+Pour les hommes : le poid est expliqué par la circonférence Fesses-Torse, la profondeur Fesse-Torse, la circonférence Mollet-Jambe, la circonférence Poitrine-Torse, la profondeur Torse-Pointrine, la  circonference Avant-Bras, la largeur Hanche-Torse, la largeur Hanches Assis Torse, la circonférence Genou-Jambe, la  circonférence Épaule-Torse, l'épaisseur Cuisse-Jambe, la circonférence Verticale-Torse, la circonférence Nombril-Torse et la  profondeur Torse-Debout.  
+
+Pour les femmes : le poid est expliqué par la circonférence Fesses-Torse, la circonférence Poitrine-Torse, la  circonference Avant-Bras, la largeur Hanches Assis Torse, la circonférence Genou-Jambe, la  circonférence Épaule-Torse, l'épaisseur Cuisse-Jambe, la circonférence Verticale-Torse, la circonférence Nombril-Torse et la circonférence Biceps-Bras.
+
+Notons que le modèle pour les hommes et celui pour les femmes sont assez similaires. 
+
+Nous retrouvons beaucoup de variables de la partie Tronc ce qui n'est pas très étonnant car c'est les variables les plus corrélés avec le poid d'une part et d'autre part, cela est assez compréhensible dans le mesure où ces parties de corps sont probablement les plus lourde de notre corps et ainsi ont un impact sur le poid.
